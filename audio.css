@@ -1,0 +1,304 @@
+.audio-settings {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(460px, calc(100vw - 28px));
+    max-height: min(90vh, 640px);
+    padding: 0;
+    color: #e4e3dc;
+    background: transparent;
+    border: 0;
+    overflow: auto;
+}
+
+.audio-settings::backdrop {
+    background: rgba(3, 7, 12, 0.78);
+    backdrop-filter: blur(2px);
+}
+
+.audio-settings-panel {
+    padding: clamp(18px, 4vw, 30px);
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 4px),
+        linear-gradient(145deg, #70777a, #3c4449 35%, #272e33 100%);
+    border: 3px solid #aeb1aa;
+    box-shadow:
+        inset 0 0 0 4px #343b40,
+        inset 0 0 0 7px #565e61,
+        0 12px 0 #111619,
+        0 20px 48px rgba(0, 0, 0, 0.55);
+}
+
+.audio-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #909697;
+}
+
+.audio-kicker,
+.audio-settings-note {
+    color: #c3ad7b;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+}
+
+.audio-settings-header h2 {
+    margin-top: 6px;
+    color: #f0eee5;
+    font-size: clamp(15px, 4vw, 21px);
+    letter-spacing: 0.15em;
+    text-shadow: 2px 2px 0 #343b40;
+}
+
+.audio-close {
+    width: 34px;
+    height: 34px;
+    color: #eeece3;
+    background: #30373b;
+    border: 2px solid #a2a7a5;
+    box-shadow: inset 0 0 0 2px #4d5558, 0 3px 0 #1b2024;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.audio-toggle-row,
+.audio-slider-row {
+    display: block;
+    margin: 15px 0;
+    color: #e1e1dc;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+}
+
+.audio-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 12px;
+    background: rgba(23, 29, 33, 0.58);
+    border: 1px solid #868d8e;
+}
+
+.audio-toggle-row input {
+    width: 19px;
+    height: 19px;
+    accent-color: var(--ship-accent, #bbc1c8);
+}
+
+.audio-slider-row span {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.audio-slider-row output {
+    color: var(--ship-accent, #d3b174);
+    font-variant-numeric: tabular-nums;
+}
+
+.audio-slider-row input {
+    display: block;
+    width: 100%;
+    height: 8px;
+    appearance: none;
+    background: #252c30;
+    border: 1px solid #a3a8a6;
+    accent-color: var(--ship-accent, #bbc1c8);
+}
+
+.audio-slider-row input::-webkit-slider-thumb {
+    width: 15px;
+    height: 20px;
+    appearance: none;
+    background: var(--ship-accent, #bbc1c8);
+    border: 2px solid #e8e4d7;
+    box-shadow: 0 2px 0 #282e32;
+}
+
+.audio-slider-row input::-moz-range-thumb {
+    width: 12px;
+    height: 16px;
+    background: var(--ship-accent, #bbc1c8);
+    border: 2px solid #e8e4d7;
+    border-radius: 0;
+    box-shadow: 0 2px 0 #282e32;
+}
+
+.audio-settings-note {
+    margin-top: 21px;
+    text-align: center;
+}
+
+.game-data-settings {
+    display: grid;
+    gap: 14px;
+    margin-top: 25px;
+    padding: 16px 14px;
+    background: rgba(18, 22, 25, 0.72);
+    border: 1px solid #8c7770;
+    border-top: 2px solid #bd7165;
+}
+
+.game-data-settings h3 {
+    margin: 6px 0 8px;
+    color: #f0eee5;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+}
+
+.game-data-settings > div > p:last-child {
+    margin: 0;
+    color: #c9cbc6;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.factory-reset-button,
+.factory-reset-danger {
+    min-height: 42px;
+    padding: 10px 14px;
+    color: #fff0e9;
+    background: linear-gradient(180deg, #854c46, #572d2c);
+    border: 2px solid #d49788;
+    box-shadow: inset 0 0 0 2px rgba(37, 24, 23, 0.55), 0 3px 0 #251b1b;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+}
+
+.factory-reset-button:hover,
+.factory-reset-danger:not(:disabled):hover {
+    background: linear-gradient(180deg, #a45c53, #713936);
+}
+
+.factory-reset-dialog {
+    position: fixed;
+    inset: 0;
+    width: min(460px, calc(100vw - 28px));
+    max-height: min(90vh, 640px);
+    margin: auto;
+    padding: 0;
+    color: #e4e3dc;
+    background: transparent;
+    border: 0;
+    overflow: auto;
+}
+
+.factory-reset-dialog::backdrop {
+    background: rgba(3, 7, 12, 0.84);
+    backdrop-filter: blur(3px);
+}
+
+.factory-reset-panel {
+    padding: clamp(20px, 5vw, 32px);
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 4px),
+        linear-gradient(145deg, #70777a, #3c4449 35%, #272e33 100%);
+    border: 3px solid #bd7165;
+    box-shadow:
+        inset 0 0 0 4px #343b40,
+        inset 0 0 0 7px #565e61,
+        0 12px 0 #111619,
+        0 20px 48px rgba(0, 0, 0, 0.55);
+}
+
+.factory-reset-panel h2 {
+    margin: 8px 0 16px;
+    color: #f0eee5;
+    font-size: clamp(15px, 4vw, 21px);
+    letter-spacing: 0.12em;
+}
+
+.factory-reset-panel > p:not(.audio-kicker) {
+    color: #dedfd9;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.factory-reset-panel .factory-reset-warning {
+    padding: 10px 12px;
+    color: #ffd3c6;
+    background: rgba(81, 35, 33, 0.55);
+    border-left: 3px solid #d49788;
+    font-weight: 700;
+}
+
+.factory-reset-label {
+    display: block;
+    margin: 18px 0 7px;
+    color: #e1e1dc;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+}
+
+.factory-reset-input {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 11px;
+    color: #f0eee5;
+    background: #20272b;
+    border: 2px solid #a3a8a6;
+    font: inherit;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+}
+
+.factory-reset-feedback {
+    display: block;
+    min-height: 20px;
+    margin-top: 10px;
+    color: #ffd3c6;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.factory-reset-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.factory-reset-actions button {
+    min-width: 105px;
+    min-height: 40px;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+.factory-reset-secondary {
+    color: #e4e3dc;
+    background: #30373b;
+    border: 2px solid #a2a7a5;
+    box-shadow: inset 0 0 0 2px #4d5558, 0 3px 0 #1b2024;
+}
+
+.factory-reset-danger:disabled,
+.factory-reset-actions button:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+}
+
+.factory-reset-dialog button:focus-visible,
+.factory-reset-dialog input:focus-visible,
+.game-data-settings button:focus-visible {
+    outline: 2px solid var(--ship-accent, #bbc1c8);
+    outline-offset: 3px;
+}
+
+.audio-settings button:focus-visible,
+.audio-settings input:focus-visible {
+    outline: 2px solid var(--ship-accent, #bbc1c8);
+    outline-offset: 3px;
+}

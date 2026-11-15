@@ -1,0 +1,252 @@
+/* =================================
+   LAUNCH ANIMATIONS
+================================= */
+
+#launch-scene.active .rocket {
+    animation: rocketLaunch 4.6s cubic-bezier(0.55, 0, 0.8, 0.35) forwards;
+}
+
+#launch-scene.active .rocket-flame {
+    animation: flameFlicker 0.14s steps(2, end) infinite alternate;
+}
+
+#launch-scene.active .smoke {
+    animation: smokeExpand 3.6s cubic-bezier(0.16, 0.72, 0.32, 1) 0.85s forwards;
+}
+
+#launch-scene.active .launch-caption {
+    animation: captionFade 3.6s ease forwards;
+}
+
+@keyframes rocketLaunch {
+    0% {
+        transform: translate(-50%, 0) scale(var(--rocket-scale, 1));
+    }
+
+    12% {
+        transform: translate(-50%, 4px) scale(var(--rocket-scale, 1));
+    }
+
+    24% {
+        transform: translate(-50%, -3px) scale(var(--rocket-scale, 1));
+    }
+
+    100% {
+        transform: translate(-50%, -125vh) scale(var(--rocket-end-scale, 0.82));
+    }
+}
+
+@keyframes flameFlicker {
+    from {
+        transform: scaleY(0.82) scaleX(0.88);
+        opacity: 0.84;
+    }
+
+    to {
+        transform: scaleY(1.12) scaleX(1.08);
+        opacity: 1;
+    }
+}
+
+@keyframes smokeExpand {
+    0% {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+
+    38% {
+        opacity: 0.42;
+        transform: scale(1.7);
+    }
+
+    100% {
+        opacity: 0.3;
+        transform: scale(4.4);
+    }
+}
+
+@keyframes captionFade {
+    0%, 82% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+/* =================================
+   WELCOME ANIMATIONS
+================================= */
+
+#welcome-scene.active .welcome-smoke {
+    animation: welcomeSmoke 4s cubic-bezier(0.2, 0.68, 0.3, 1) forwards;
+}
+
+#welcome-scene.active .welcome-message {
+    animation: welcomeAppear 1.8s cubic-bezier(0.2, 0.7, 0.25, 1) 0.75s forwards;
+}
+
+@keyframes welcomeSmoke {
+    0% {
+        opacity: 0;
+        transform: scale(0.68) translateY(4%);
+    }
+
+    35% {
+        opacity: 0.94;
+        transform: scale(1.08) translateY(0);
+    }
+
+    100% {
+        opacity: 0.08;
+        transform: scale(1.42) translateY(-2%);
+    }
+}
+
+@keyframes welcomeAppear {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+        filter: blur(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+
+/* =================================
+   SCENE TRANSITIONS
+================================= */
+
+.scene.active {
+    z-index: 1;
+    animation: sceneFadeIn 520ms steps(8, end) both;
+}
+
+.scene.active.scene-entering {
+    animation: scenePixelEnter 480ms steps(8, end) both;
+}
+
+.scene.scene-leaving {
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+    animation: scenePixelLeave 480ms steps(8, end) both;
+}
+
+@keyframes sceneFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scenePixelEnter {
+    0% {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+        transform: translateX(14px) scale(0.99);
+        filter: brightness(1.25);
+    }
+
+    68% {
+        opacity: 1;
+        clip-path: inset(0);
+        transform: translateX(-2px) scale(1);
+    }
+
+    84% {
+        transform: translateX(1px);
+    }
+
+    100% {
+        opacity: 1;
+        clip-path: inset(0);
+        transform: translateX(0);
+        filter: brightness(1);
+    }
+}
+
+@keyframes scenePixelLeave {
+    from {
+        opacity: 1;
+        clip-path: inset(0);
+    }
+
+    to {
+        opacity: 0;
+        clip-path: inset(100% 0 0);
+        filter: brightness(1.2) saturate(0.8);
+        transform: translateY(-5px);
+    }
+}
+
+
+/* =================================
+   COCKPIT ANIMATIONS
+================================= */
+
+#cockpit-scene.active .cockpit-art {
+    animation: cockpitSettle 900ms ease-out both;
+}
+
+#cockpit-scene.active .station-screen::after {
+    animation: stationSignal 3s steps(2, end) infinite;
+}
+
+@keyframes cockpitSettle {
+    from {
+        filter: brightness(1.3);
+    }
+
+    to {
+        filter: brightness(1);
+    }
+}
+
+@keyframes stationSignal {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.42;
+    }
+}
+
+@keyframes cockpitPanelOpen {
+    from {
+        clip-path: inset(0 0 100% 0);
+        opacity: 0;
+    }
+
+    to {
+        clip-path: inset(0);
+        opacity: 1;
+    }
+}
+
+
+/* =================================
+   REDUCED MOTION ACCESSIBILITY
+================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}

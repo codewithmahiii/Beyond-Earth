@@ -1,0 +1,150 @@
+#game-robot-companion {
+    --lz-pink: var(--theme-highlight);
+    --lz-lavender: var(--theme-primary);
+    --lz-mint: var(--theme-highlight);
+    --lz-gold: var(--theme-highlight);
+    --lz-red: var(--theme-primary);
+    position: absolute;
+    z-index: 90;
+    right: clamp(8px, 1.5vw, 22px);
+    bottom: 12px;
+    display: grid;
+    justify-items: end;
+    pointer-events: none;
+}
+
+#game-robot-companion[hidden] {
+    display: none;
+}
+
+#game-robot-companion.is-mission-play {
+    right: clamp(8px, 1.5vw, 20px);
+    bottom: clamp(80px, 11vh, 98px);
+}
+
+#game-robot-companion.is-dialog {
+    position: fixed;
+    right: clamp(12px, 2vw, 28px);
+    bottom: clamp(12px, 2vh, 24px);
+    z-index: 99;
+}
+
+.game-robot-companion__button {
+    display: grid;
+    width: 68px;
+    height: 84px;
+    place-items: end center;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    pointer-events: auto;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.game-robot-companion__button .landing-zone__robot {
+    margin: 0;
+    transform-origin: bottom center;
+    transition: filter 160ms ease;
+}
+
+.game-robot-companion__button:hover .landing-zone__robot,
+.game-robot-companion__button:focus-visible .landing-zone__robot {
+    filter: brightness(1.16);
+}
+
+.game-robot-companion__button:focus-visible {
+    outline: 2px solid var(--theme-highlight);
+    outline-offset: 3px;
+}
+
+.game-robot-companion__bubble {
+    position: absolute;
+    right: 68px;
+    bottom: 18px;
+    width: min(250px, calc(100vw - 92px));
+    padding: 0.65rem 0.75rem;
+    color: #e8edf5;
+    background: color-mix(in srgb, #151b26 92%, var(--theme-primary));
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 78%, #aeb9ca);
+    box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.38), inset 0 0 0 2px rgba(255, 255, 255, 0.045);
+    pointer-events: auto;
+    animation: robotCompanionBubbleIn 180ms ease-out both;
+}
+
+.game-robot-companion__bubble[hidden] {
+    display: none;
+}
+
+.game-robot-companion__bubble::after {
+    position: absolute;
+    right: -5px;
+    bottom: 16px;
+    width: 8px;
+    height: 8px;
+    content: "";
+    background: #222631;
+    border-top: 1px solid var(--theme-primary);
+    border-right: 1px solid var(--theme-primary);
+    transform: rotate(45deg);
+}
+
+.game-robot-companion__name {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--theme-highlight);
+    font: 0.53rem/1.5 "Press Start 2P", "Courier New", monospace;
+    letter-spacing: 0.04em;
+}
+
+.game-robot-companion__message {
+    margin: 0;
+    font: 0.7rem/1.45 "Space Mono", "Courier New", monospace;
+}
+
+#game-robot-companion[data-mood="alert"] .landing-zone__robot-antenna::before {
+    background: var(--theme-primary);
+    box-shadow: 0 0 10px var(--theme-primary);
+}
+
+#game-robot-companion[data-mood="mischievous"] .landing-zone__robot-antenna::before {
+    background: var(--theme-highlight);
+    box-shadow: 0 0 10px var(--theme-highlight);
+}
+
+@keyframes robotCompanionBubbleIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 620px) {
+    #game-robot-companion {
+        right: 5px;
+        bottom: 6px;
+    }
+
+    #game-robot-companion.is-mission-play {
+        right: 5px;
+        bottom: 82px;
+    }
+
+    .game-robot-companion__button {
+        width: 56px;
+        height: 70px;
+        transform: scale(0.82);
+        transform-origin: bottom right;
+    }
+
+    .game-robot-companion__bubble {
+        right: 54px;
+        bottom: 8px;
+        width: min(230px, calc(100vw - 76px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .game-robot-companion__bubble {
+        animation-duration: 1ms;
+    }
+}

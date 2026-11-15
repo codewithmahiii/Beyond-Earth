@@ -1,0 +1,2336 @@
+/* =================================
+   GLOBAL SETTINGS
+================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --space-dark: #080d25;
+    --space-blue: #101b3c;
+    --space-panel: #111d3a;
+    --periwinkle: #929edb;
+    --soft-white: #e9edf9;
+    --gold: #e6c77a;
+    --muted-blue: #64749d;
+}
+
+body {
+    background: var(--space-dark);
+    color: var(--soft-white);
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+#game {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.scene {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+}
+
+.scene.active {
+    display: block;
+}
+
+
+/* =================================
+   LAUNCH SCENE
+================================= */
+
+#launch-scene {
+    background:
+        linear-gradient(180deg, #080d25 0%, #18294c 65%, #29334a 100%);
+}
+
+.stars,
+.welcome-stars,
+.space-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(2px 2px at 15% 20%, white 90%, transparent),
+        radial-gradient(2px 2px at 70% 15%, white 90%, transparent),
+        radial-gradient(2px 2px at 40% 45%, white 90%, transparent),
+        radial-gradient(2px 2px at 85% 60%, white 90%, transparent),
+        radial-gradient(2px 2px at 25% 75%, white 90%, transparent),
+        radial-gradient(2px 2px at 60% 85%, white 90%, transparent);
+    background-size: 300px 250px;
+}
+
+.launch-platform {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 18%;
+    background: linear-gradient(#29354e, #10172c);
+    border-top: 5px solid #68738c;
+}
+
+.platform-lights {
+    position: absolute;
+    top: 15px;
+    width: 100%;
+    height: 3px;
+    background: var(--gold);
+    box-shadow: 0 0 15px var(--gold);
+}
+
+.rocket {
+    position: absolute;
+    bottom: 16%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75px;
+    height: 230px;
+    z-index: 2;
+}
+
+.rocket-body {
+    position: absolute;
+    bottom: 0;
+    left: 13px;
+    width: 49px;
+    height: 175px;
+    background: linear-gradient(90deg, #aab5ca, #f4f3ed, #929db3);
+    border: 3px solid #53617e;
+}
+
+.rocket-nose {
+    position: absolute;
+    top: 0;
+    left: 13px;
+    width: 49px;
+    height: 60px;
+    background: #e8eaf0;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.rocket-window {
+    position: absolute;
+    top: 35px;
+    left: 10px;
+    width: 23px;
+    height: 23px;
+    border: 4px solid #65749b;
+    border-radius: 50%;
+    background: #7dadd4;
+}
+
+.rocket-detail {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    height: 8px;
+    background: #9badd0;
+}
+
+.rocket-fin {
+    position: absolute;
+    bottom: 0;
+    width: 22px;
+    height: 55px;
+    background: #b7bfd0;
+}
+
+.left-fin {
+    left: -7px;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.right-fin {
+    right: -7px;
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.rocket-flame {
+    position: absolute;
+    bottom: -65px;
+    left: 24px;
+    width: 27px;
+    height: 70px;
+    background: linear-gradient(#fff4b0, #f3a13d, #e45b35);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    filter: drop-shadow(0 0 15px orange);
+}
+
+.smoke {
+    position: absolute;
+    bottom: 8%;
+    width: 300px;
+    height: 130px;
+    background: #aab1c0;
+    border-radius: 50%;
+    filter: blur(25px);
+    opacity: 0;
+}
+
+.smoke-one {
+    left: 25%;
+}
+
+.smoke-two {
+    right: 25%;
+}
+
+.smoke-three {
+    left: 40%;
+    bottom: 10%;
+    width: 400px;
+}
+
+.launch-caption {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 4px;
+}
+
+.launch-caption p {
+    color: var(--gold);
+    font-size: 11px;
+    margin-bottom: 12px;
+}
+
+.launch-caption h1 {
+    font-size: clamp(22px, 4vw, 40px);
+    letter-spacing: 7px;
+}
+
+.launch-caption span {
+    display: block;
+    color: #aab6d3;
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.skip-button {
+    position: absolute;
+    bottom: 30px;
+    right: 35px;
+    padding: 10px 18px;
+    color: white;
+    background: transparent;
+    border: 1px solid #7181a9;
+    z-index: 10;
+}
+
+
+/* =================================
+   WELCOME SCENE
+================================= */
+
+#welcome-scene {
+    background: #101a34;
+}
+
+.welcome-smoke {
+    position: absolute;
+    inset: -20%;
+    background:
+        radial-gradient(ellipse at 50% 50%,
+        #c0c4cc 0%,
+        #929bab 20%,
+        #53617b 45%,
+        transparent 70%);
+    opacity: 0;
+    filter: blur(30px);
+}
+
+.welcome-message {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    opacity: 0;
+    z-index: 2;
+}
+
+.welcome-message p {
+    color: var(--gold);
+    letter-spacing: 5px;
+    font-size: 12px;
+}
+
+.welcome-message h1 {
+    font-size: clamp(35px, 7vw, 75px);
+    letter-spacing: 8px;
+    line-height: 1.25;
+    margin: 25px 0;
+    text-shadow: 0 0 25px #9ba9e8;
+}
+
+.welcome-message span {
+    letter-spacing: 4px;
+    color: #c0c9e3;
+    font-size: 12px;
+}
+
+
+/* =================================
+   COCKPIT SCENE
+================================= */
+
+#cockpit-scene {
+    background: #070d20;
+}
+
+.space-window {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, #080d25, #17294d);
+}
+
+.planet {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    right: 18%;
+    top: 13%;
+    background: linear-gradient(135deg, #7a9ac7, #263d6c 60%, #101a38);
+    box-shadow: inset -45px -20px 70px #080d25;
+}
+
+.planet-glow {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    right: 15%;
+    top: 9%;
+    border-radius: 50%;
+    box-shadow: 0 0 60px #647fb4;
+    opacity: 0.3;
+}
+
+.cockpit-frame {
+    position: absolute;
+    inset: 0;
+    padding: 25px 35px;
+    background:
+        linear-gradient(180deg, transparent 40%, #080d25 100%);
+}
+
+.top-frame {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--soft-white);
+}
+
+.system-status {
+    color: #a5d8a5;
+}
+
+.cockpit-display {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 13%;
+    height: 38%;
+    display: grid;
+    grid-template-columns: 1fr 2.2fr 1fr;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.side-panel,
+.main-panel {
+    background: rgba(12, 22, 48, 0.94);
+    border: 2px solid #52658d;
+    padding: 20px;
+    box-shadow: inset 0 0 20px rgba(100, 130, 190, 0.12);
+}
+
+.panel-label,
+.side-panel span {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #9daed4;
+    margin-bottom: 14px;
+}
+
+.side-panel strong {
+    display: block;
+    font-size: 17px;
+    margin: 5px 0 20px;
+}
+
+.gold-text {
+    color: var(--gold);
+}
+
+.radar-circle {
+    width: 90px;
+    height: 90px;
+    margin: 15px auto;
+    border: 2px solid #8295c7;
+    border-radius: 50%;
+    background:
+        linear-gradient(90deg, transparent 49%, #8295c7 50%, transparent 51%),
+        linear-gradient(transparent 49%, #8295c7 50%, transparent 51%),
+        radial-gradient(circle, transparent 30%, #52658d 31%, transparent 32%);
+}
+
+.main-panel {
+    text-align: center;
+    border-color: #8493bd;
+    padding: 20px 35px;
+}
+
+.agency-label {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 4px;
+}
+
+.main-panel h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 0.95;
+    letter-spacing: 8px;
+    margin: 10px 0;
+    text-shadow: 0 0 20px #8295c7;
+}
+
+.menu-subtitle {
+    font-size: 9px;
+    color: #a6b4d3;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.main-menu {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.menu-button {
+    background: #17284b;
+    color: white;
+    border: 1px solid #53688f;
+    padding: 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: 0.2s ease;
+}
+
+.menu-button span:first-child {
+    color: var(--gold);
+    margin-right: 8px;
+}
+
+.menu-button:hover,
+.menu-button.primary {
+    background: #293e68;
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.button-arrow {
+    margin-left: 8px;
+    color: var(--gold);
+}
+
+.bottom-console {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    background: linear-gradient(#192747, #080d20);
+    border-top: 3px solid #53688f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.console-light {
+    position: absolute;
+    top: -3px;
+    left: 40%;
+    width: 20%;
+    height: 3px;
+    background: var(--gold);
+    box-shadow: 0 0 15px var(--gold);
+}
+
+.cockpit-footer {
+    position: absolute;
+    bottom: 11%;
+    left: 5%;
+    right: 5%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #9baacb;
+}
+
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 700px) {
+    .cockpit-display {
+        grid-template-columns: 1fr;
+        bottom: 12%;
+        height: 65%;
+    }
+
+    .side-panel {
+        display: none;
+    }
+
+    .main-panel {
+        padding: 15px;
+    }
+
+    .menu-button {
+        font-size: 9px;
+    }
+}
+
+
+/* =================================
+   PIXEL-ART POLISH
+================================= */
+
+:root {
+    --space-dark: #070b20;
+    --space-blue: #111a38;
+    --space-panel: #111b35;
+    --periwinkle: #9da9e2;
+    --soft-white: #f0f1ec;
+    --gold: #dfc17b;
+    --muted-blue: #7181aa;
+    --pixel-line: rgba(195, 207, 240, 0.22);
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-family: "Courier New", monospace;
+    -webkit-font-smoothing: none;
+    text-rendering: geometricPrecision;
+}
+
+#game {
+    height: 100vh;
+    height: 100dvh;
+    isolation: isolate;
+}
+
+.scene {
+    min-height: 100%;
+}
+
+.scene.active {
+    display: block;
+}
+
+button {
+    color: inherit;
+}
+
+button:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+}
+
+/* Launch: a stepped launch structure, a larger vehicle, and layered plumes. */
+#launch-scene {
+    background:
+        radial-gradient(ellipse at 50% 70%, rgba(84, 111, 157, 0.3), transparent 49%),
+        linear-gradient(180deg, #080d25 0%, #111d3d 46%, #26334d 78%, #11172c 100%);
+}
+
+#launch-scene::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    content: "";
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(5, 9, 25, 0.4), transparent 24% 76%, rgba(5, 9, 25, 0.42)),
+        linear-gradient(0deg, rgba(5, 9, 24, 0.36), transparent 48%);
+}
+
+.stars,
+.welcome-stars,
+.space-stars {
+    background-image:
+        radial-gradient(2px 2px at 8% 17%, #fff8df 90%, transparent),
+        radial-gradient(2px 2px at 15% 68%, #d9e3ff 90%, transparent),
+        radial-gradient(1px 1px at 21% 38%, #fff 90%, transparent),
+        radial-gradient(2px 2px at 31% 12%, #f6e5ad 90%, transparent),
+        radial-gradient(1px 1px at 39% 57%, #fff 90%, transparent),
+        radial-gradient(2px 2px at 49% 29%, #d5ddff 90%, transparent),
+        radial-gradient(1px 1px at 57% 77%, #fff 90%, transparent),
+        radial-gradient(2px 2px at 68% 48%, #fff1c8 90%, transparent),
+        radial-gradient(1px 1px at 76% 18%, #fff 90%, transparent),
+        radial-gradient(2px 2px at 84% 72%, #d9e3ff 90%, transparent),
+        radial-gradient(1px 1px at 93% 36%, #fff 90%, transparent);
+    background-size: 390px 290px;
+}
+
+#launch-scene .stars {
+    opacity: 0.84;
+}
+
+#launch-scene .stars::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    opacity: 0.35;
+    background-image:
+        radial-gradient(1px 1px at 12% 47%, white 90%, transparent),
+        radial-gradient(1px 1px at 33% 83%, white 90%, transparent),
+        radial-gradient(1px 1px at 72% 31%, white 90%, transparent),
+        radial-gradient(1px 1px at 88% 11%, white 90%, transparent);
+    background-size: 230px 190px;
+}
+
+.launch-platform {
+    z-index: 2;
+    height: 18%;
+    min-height: 120px;
+    border: 0;
+    background:
+        linear-gradient(180deg, transparent 0 11%, #384763 11% 14%, transparent 14%),
+        repeating-linear-gradient(90deg, transparent 0 62px, rgba(161, 179, 216, 0.09) 62px 64px),
+        linear-gradient(180deg, #27344e 0%, #18223a 17%, #11182c 70%, #090e20 100%);
+    box-shadow: 0 -12px 35px rgba(11, 17, 39, 0.48);
+}
+
+.launch-platform::before {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    height: 28px;
+    content: "";
+    background:
+        linear-gradient(90deg, transparent 0 8%, #55627d 8% 8.4%, transparent 8.4% 91.6%, #55627d 91.6% 92%, transparent 92%),
+        linear-gradient(180deg, #465571 0 5px, #202c46 5px 13px, #10182b 13px);
+    clip-path: polygon(0 100%, 8% 0, 92% 0, 100% 100%);
+}
+
+.launch-platform::after {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: min(46vw, 520px);
+    height: 66px;
+    content: "";
+    transform: translateX(-50%);
+    background:
+        repeating-linear-gradient(90deg, #68758a 0 4px, #303d57 4px 20px, #1d2942 20px 24px);
+    border: 3px solid #71809b;
+    border-bottom: 0;
+    clip-path: polygon(11% 0, 89% 0, 100% 100%, 0 100%);
+    opacity: 0.66;
+}
+
+.platform-lights {
+    top: 5px;
+    z-index: 2;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0 5px, transparent 5px 36px);
+    box-shadow: 0 0 11px rgba(223, 193, 123, 0.75);
+}
+
+.rocket {
+    bottom: 15%;
+    width: 108px;
+    height: 300px;
+    filter: drop-shadow(0 12px 16px rgba(3, 7, 18, 0.48));
+}
+
+.rocket::before {
+    position: absolute;
+    z-index: 3;
+    top: 61px;
+    left: 48px;
+    width: 12px;
+    height: 142px;
+    content: "";
+    background: linear-gradient(90deg, rgba(255,255,255,.55), rgba(255,255,255,0));
+    pointer-events: none;
+}
+
+.rocket-body {
+    left: 24px;
+    width: 60px;
+    height: 231px;
+    overflow: hidden;
+    border: 3px solid #687793;
+    background:
+        linear-gradient(90deg, #7786a1 0 8%, #d8dce2 8% 22%, #f1efe6 22% 78%, #b8c2d2 78% 92%, #7786a1 92%),
+        #dfe3e9;
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.22), 0 0 18px rgba(187, 206, 244, 0.13);
+}
+
+.rocket-body::before,
+.rocket-body::after {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    content: "";
+    background: #687895;
+    box-shadow: 0 2px 0 rgba(244, 238, 215, 0.55);
+}
+
+.rocket-body::before {
+    top: 89px;
+}
+
+.rocket-body::after {
+    bottom: 30px;
+    height: 5px;
+    background: #bd9f65;
+}
+
+.rocket-nose {
+    top: 0;
+    left: 24px;
+    width: 60px;
+    height: 72px;
+    background: linear-gradient(90deg, #aeb8c9, #f1efe7 26% 74%, #b7c1d0);
+    clip-path: polygon(50% 0, 83% 54%, 100% 100%, 0 100%, 17% 54%);
+    filter: drop-shadow(0 -2px 0 #e7e9ed);
+}
+
+.rocket-window {
+    top: 44px;
+    left: 16px;
+    width: 23px;
+    height: 23px;
+    border: 4px solid #4d5c7a;
+    background: linear-gradient(135deg, #d9eff5 0 18%, #82bad4 20% 50%, #426b91 52%);
+    box-shadow: 0 0 0 2px #c5cbd6, 0 0 12px rgba(124, 191, 226, 0.5);
+}
+
+.rocket-detail {
+    top: 150px;
+    left: 0;
+    height: 7px;
+    background: repeating-linear-gradient(90deg, #8f9db8 0 8px, #d8dbe0 8px 12px);
+}
+
+.rocket-fin {
+    bottom: 0;
+    width: 31px;
+    height: 76px;
+    background: linear-gradient(90deg, #78859e, #d0d4db 60%, #8c98ad);
+    border: 2px solid #697692;
+}
+
+.left-fin {
+    left: 1px;
+    clip-path: polygon(76% 0, 100% 0, 100% 100%, 0 100%, 0 44%);
+}
+
+.right-fin {
+    right: 1px;
+    clip-path: polygon(0 0, 24% 0, 100% 44%, 100% 100%, 0 100%);
+}
+
+.rocket-flame {
+    bottom: -96px;
+    left: 37px;
+    width: 35px;
+    height: 94px;
+    background: linear-gradient(180deg, #fff5c3 0%, #ffcf69 27%, #ef853c 69%, rgba(211, 73, 52, 0.05) 100%);
+    filter: drop-shadow(0 0 11px #ffbd62) drop-shadow(0 0 28px rgba(232, 103, 53, 0.76));
+    transform-origin: 50% 0;
+}
+
+.rocket-flame::after {
+    position: absolute;
+    inset: 0 10px 24px;
+    content: "";
+    background: linear-gradient(#fffdf0, #ffe59c 70%, transparent);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.smoke {
+    z-index: 3;
+    bottom: 8%;
+    width: min(42vw, 520px);
+    height: min(30vw, 250px);
+    border-radius: 48%;
+    background:
+        radial-gradient(ellipse at 48% 52%, rgba(194, 203, 216, 0.76), rgba(144, 158, 181, 0.58) 36%, rgba(97, 116, 149, 0.28) 63%, transparent 75%);
+    filter: blur(19px);
+    transform: scale(0.45);
+    transform-origin: 50% 78%;
+}
+
+.smoke-one {
+    left: 12%;
+}
+
+.smoke-two {
+    right: 12%;
+    background:
+        radial-gradient(ellipse at 50% 51%, rgba(178, 191, 210, 0.7), rgba(129, 147, 176, 0.55) 39%, rgba(87, 107, 140, 0.25) 67%, transparent 76%);
+}
+
+.smoke-three {
+    left: 50%;
+    bottom: 4%;
+    width: min(70vw, 820px);
+    height: min(46vw, 360px);
+    transform: translateX(-50%) scale(0.4);
+    background:
+        radial-gradient(ellipse at 50% 55%, rgba(186, 197, 213, 0.74), rgba(130, 148, 176, 0.56) 43%, rgba(88, 108, 141, 0.22) 70%, transparent 78%);
+}
+
+.launch-caption {
+    z-index: 2;
+    top: 9%;
+    text-shadow: 0 2px 14px rgba(4, 8, 24, 0.8);
+}
+
+#launch-scene.active .launch-caption {
+    z-index: 4;
+    text-shadow: 0 2px 3px #070b20, 0 0 18px rgba(7, 11, 32, 0.95);
+}
+
+.launch-caption p,
+.agency-label {
+    color: #e8cc8d;
+}
+
+.launch-caption h1 {
+    color: #f1f0eb;
+    text-shadow: 0 0 25px rgba(159, 175, 229, 0.42);
+}
+
+.skip-button {
+    z-index: 5;
+    bottom: 26px;
+    right: 30px;
+    padding: 11px 16px;
+    color: #e7e8ee;
+    background: rgba(10, 17, 38, 0.62);
+    border: 1px solid rgba(157, 169, 226, 0.62);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    letter-spacing: 1px;
+    transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.skip-button:hover {
+    color: #fff3d4;
+    background: rgba(44, 57, 91, 0.86);
+    border-color: var(--gold);
+}
+
+/* Welcome: several soft, offset smoke layers reveal the greeting. */
+#welcome-scene {
+    background:
+        radial-gradient(ellipse at 50% 51%, rgba(54, 68, 105, 0.48), transparent 57%),
+        linear-gradient(180deg, #0b112a, #111b38 52%, #080d23);
+}
+
+.welcome-smoke {
+    inset: -35%;
+    background:
+        radial-gradient(ellipse at 50% 51%, rgba(218, 222, 226, 0.78) 0%, rgba(158, 172, 192, 0.52) 20%, transparent 54%),
+        radial-gradient(ellipse at 27% 62%, rgba(154, 171, 195, 0.5) 0%, transparent 36%),
+        radial-gradient(ellipse at 76% 39%, rgba(191, 198, 211, 0.48) 0%, transparent 39%);
+    filter: blur(23px);
+}
+
+.welcome-smoke::before,
+.welcome-smoke::after {
+    position: absolute;
+    inset: 8% -10%;
+    content: "";
+    background:
+        radial-gradient(ellipse at 25% 50%, rgba(184, 195, 212, 0.55), transparent 35%),
+        radial-gradient(ellipse at 73% 54%, rgba(134, 153, 182, 0.54), transparent 40%);
+    filter: blur(34px);
+}
+
+.welcome-smoke::after {
+    inset: 30% 4%;
+    opacity: 0.62;
+    filter: blur(45px);
+}
+
+.welcome-message {
+    padding: 24px;
+    text-shadow: 0 3px 22px rgba(5, 9, 25, 0.92);
+}
+
+.welcome-message p {
+    color: #e5ca8d;
+    letter-spacing: 0.34em;
+    font-size: clamp(9px, 1.15vw, 12px);
+}
+
+.welcome-message h1 {
+    margin: 28px 0 24px;
+    color: #f5f2e9;
+    font-size: clamp(34px, 7.4vw, 82px);
+    letter-spacing: clamp(4px, 0.8vw, 9px);
+    line-height: 1.12;
+    text-shadow: 0 0 12px rgba(212, 222, 255, 0.5), 0 5px 25px rgba(5, 9, 25, 0.9);
+}
+
+.welcome-message span {
+    color: #c4cce0;
+    letter-spacing: 0.28em;
+    font-size: clamp(9px, 1.1vw, 12px);
+}
+
+/* Cockpit: the window stays panoramic; the console reads as physical hardware. */
+#cockpit-scene {
+    background: #070b1c;
+}
+
+.space-window {
+    inset: 2% 2% 17%;
+    border: 5px solid #384663;
+    background:
+        radial-gradient(ellipse at 55% 90%, rgba(95, 119, 173, 0.28), transparent 48%),
+        linear-gradient(180deg, #070c22, #101c3d 68%, #263a5b);
+    box-shadow:
+        inset 0 0 0 3px rgba(152, 167, 205, 0.12),
+        inset 0 -35px 70px rgba(9, 14, 33, 0.65),
+        0 0 34px rgba(99, 123, 178, 0.18);
+    clip-path: polygon(0 0, 100% 0, 100% 82%, 94% 100%, 6% 100%, 0 82%);
+}
+
+.space-window::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background:
+        linear-gradient(108deg, transparent 0 17%, rgba(185, 202, 240, 0.06) 17.2%, transparent 19%),
+        linear-gradient(72deg, transparent 0 80%, rgba(185, 202, 240, 0.08) 80.2%, transparent 82%);
+}
+
+.space-stars {
+    opacity: 0.9;
+    background-size: 310px 250px;
+}
+
+.space-stars::after {
+    position: absolute;
+    inset: -20%;
+    content: "";
+    opacity: 0.46;
+    background-image:
+        radial-gradient(1px 1px at 16% 25%, #fff 90%, transparent),
+        radial-gradient(1px 1px at 44% 69%, #dbe5ff 90%, transparent),
+        radial-gradient(1px 1px at 66% 20%, #fff 90%, transparent),
+        radial-gradient(1px 1px at 82% 55%, #f2d89d 90%, transparent);
+    background-size: 220px 180px;
+}
+
+.planet {
+    top: 7%;
+    right: 17%;
+    width: clamp(220px, 34vw, 470px);
+    height: auto;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid rgba(192, 212, 241, 0.62);
+    background:
+        radial-gradient(ellipse at 27% 28%, rgba(196, 209, 225, 0.62) 0 2%, transparent 3%),
+        radial-gradient(ellipse at 61% 45%, rgba(45, 70, 111, 0.55) 0 9%, transparent 10%),
+        radial-gradient(ellipse at 32% 64%, rgba(44, 69, 108, 0.58) 0 7%, transparent 8%),
+        repeating-linear-gradient(170deg, transparent 0 25px, rgba(192, 210, 236, 0.12) 26px 30px, transparent 31px 48px),
+        radial-gradient(circle at 34% 29%, #a9bfd5 0%, #718eaf 28%, #405b83 58%, #1a2c50 78%);
+    box-shadow:
+        inset -40px -17px 72px #080d25,
+        inset 16px 8px 32px rgba(218, 231, 247, 0.36),
+        0 0 38px rgba(117, 153, 206, 0.22);
+}
+
+.planet::before,
+.planet::after {
+    position: absolute;
+    content: "";
+    pointer-events: none;
+}
+
+.planet::before {
+    inset: 12% 9%;
+    opacity: 0.45;
+    background: repeating-linear-gradient(0deg, transparent 0 22px, rgba(221, 229, 240, 0.15) 23px 26px, transparent 27px 43px);
+    clip-path: polygon(0 12%, 83% 0, 100% 70%, 15% 100%);
+}
+
+.planet::after {
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(105deg, rgba(227, 233, 239, 0.28), transparent 36% 67%, rgba(2, 6, 19, 0.62));
+}
+
+.planet-glow {
+    top: 4%;
+    right: calc(17% - 4vw);
+    width: clamp(250px, 41vw, 550px);
+    height: auto;
+    aspect-ratio: 1;
+    border: 1px solid rgba(173, 194, 233, 0.18);
+    box-shadow: 0 0 54px rgba(105, 137, 192, 0.24), inset 0 0 28px rgba(115, 145, 204, 0.12);
+}
+
+.cockpit-frame {
+    z-index: 1;
+    padding: 24px clamp(18px, 3.4vw, 48px);
+    background:
+        linear-gradient(180deg, rgba(6, 10, 27, 0.76) 0, transparent 13% 54%, rgba(7, 11, 28, 0.35) 72%, #0a1026 88%),
+        radial-gradient(ellipse at 50% 54%, transparent 40%, rgba(4, 8, 22, 0.2) 100%);
+    pointer-events: none;
+}
+
+.cockpit-frame::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    box-shadow: inset 0 0 0 9px #0a1025, inset 0 0 0 13px #34415d, inset 0 0 0 16px rgba(151, 168, 201, 0.28);
+}
+
+.cockpit-frame::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 20%;
+    content: "";
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(90deg, transparent 0 58px, rgba(177, 190, 220, 0.1) 59px 62px),
+        linear-gradient(180deg, #27334e, #10182d 18%, #080d20);
+    border-top: 5px solid #53617f;
+    box-shadow: 0 -12px 28px rgba(5, 9, 22, 0.34), inset 0 3px 0 rgba(201, 211, 230, 0.12);
+}
+
+.top-frame {
+    z-index: 2;
+    padding: 4px 14px 12px;
+    color: #c5cde0;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-shadow: 0 2px 8px #080d25;
+}
+
+.system-status {
+    color: #b7d9b2;
+}
+
+.cockpit-display {
+    z-index: 2;
+    left: 5.5%;
+    right: 5.5%;
+    bottom: 20%;
+    height: min(43%, 370px);
+    grid-template-columns: minmax(150px, 0.82fr) minmax(360px, 2fr) minmax(150px, 0.82fr);
+    gap: clamp(10px, 1.6vw, 22px);
+    align-items: stretch;
+    pointer-events: auto;
+}
+
+.side-panel,
+.main-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, rgba(40, 54, 82, 0.52), transparent 36%),
+        rgba(10, 18, 40, 0.9);
+    border: 1px solid #667798;
+    box-shadow:
+        inset 0 0 0 4px rgba(6, 11, 27, 0.72),
+        inset 0 0 25px rgba(120, 145, 195, 0.13),
+        0 9px 24px rgba(3, 7, 19, 0.32);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.side-panel::before,
+.main-panel::before {
+    position: absolute;
+    top: 9px;
+    right: 12px;
+    width: 5px;
+    height: 5px;
+    content: "";
+    background: var(--gold);
+    box-shadow: -10px 0 0 #7890bd, -20px 0 0 #7890bd;
+    opacity: 0.82;
+}
+
+.side-panel {
+    padding: clamp(14px, 1.8vw, 24px);
+}
+
+.panel-label,
+.side-panel span {
+    color: #b1bfdf;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+}
+
+.panel-label {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(150, 169, 210, 0.24);
+}
+
+.side-panel strong {
+    color: #f0eee7;
+    font-size: clamp(14px, 1.3vw, 19px);
+    letter-spacing: 0.08em;
+}
+
+.radar-circle {
+    position: relative;
+    width: clamp(68px, 7vw, 94px);
+    height: auto;
+    aspect-ratio: 1;
+    border-color: #8d9fca;
+    background:
+        linear-gradient(90deg, transparent 49%, rgba(139, 163, 213, 0.7) 50%, transparent 51%),
+        linear-gradient(transparent 49%, rgba(139, 163, 213, 0.7) 50%, transparent 51%),
+        radial-gradient(circle, transparent 28%, rgba(111, 133, 181, 0.6) 29% 30%, transparent 31% 58%, rgba(111, 133, 181, 0.55) 59% 60%, transparent 61%),
+        rgba(22, 35, 65, 0.62);
+    box-shadow: inset 0 0 20px rgba(119, 158, 221, 0.16), 0 0 15px rgba(108, 145, 210, 0.12);
+}
+
+.radar-circle::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    content: "";
+    background: var(--gold);
+    box-shadow: 12px -18px 0 -1px #b8d2df, -22px 9px 0 -1px #b8d2df, 0 0 8px var(--gold);
+    transform: translate(-50%, -50%);
+}
+
+.main-panel {
+    padding: clamp(16px, 2vw, 26px) clamp(18px, 2.6vw, 38px);
+    text-align: center;
+    border-color: #94a4ca;
+    background:
+        linear-gradient(180deg, rgba(35, 49, 79, 0.72), rgba(12, 21, 46, 0.96) 35%),
+        rgba(12, 22, 48, 0.96);
+    box-shadow:
+        inset 0 0 0 4px rgba(7, 12, 30, 0.8),
+        inset 0 0 38px rgba(115, 139, 195, 0.19),
+        0 0 28px rgba(108, 135, 195, 0.18);
+}
+
+.main-panel::after {
+    position: absolute;
+    top: 0;
+    right: 18%;
+    left: 18%;
+    height: 2px;
+    content: "";
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    box-shadow: 0 0 12px rgba(223, 193, 123, 0.58);
+}
+
+.agency-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+}
+
+.main-panel h1 {
+    margin: 9px 0 8px;
+    color: #f3f1e9;
+    font-size: clamp(27px, 3.4vw, 46px);
+    letter-spacing: 0.18em;
+    text-shadow: 0 0 18px rgba(153, 173, 229, 0.52), 0 3px 0 rgba(45, 57, 92, 0.9);
+}
+
+.menu-subtitle {
+    color: #bec8df;
+    font-size: 9px;
+    letter-spacing: 0.13em;
+}
+
+.main-menu {
+    gap: 7px;
+}
+
+.menu-button {
+    position: relative;
+    min-height: 39px;
+    padding: 10px 12px;
+    color: #e7e9ef;
+    background: linear-gradient(180deg, #263959, #172644);
+    border: 1px solid #64799f;
+    box-shadow: inset 0 1px rgba(232, 238, 250, 0.12), 0 3px 0 #0b1329;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+    transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.menu-button:hover,
+.menu-button.primary {
+    color: #fff5d9;
+    background: linear-gradient(180deg, #394a70, #25375c);
+    border-color: var(--gold);
+    box-shadow: inset 0 1px rgba(255, 245, 220, 0.2), 0 3px 0 #0b1329, 0 0 13px rgba(223, 193, 123, 0.15);
+}
+
+.menu-button:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 1px rgba(255, 245, 220, 0.16), 0 1px 0 #0b1329;
+}
+
+.menu-button span:first-child,
+.button-arrow {
+    color: #e4c781;
+}
+
+.bottom-console {
+    z-index: 3;
+    height: 17%;
+    padding: 0 clamp(20px, 6vw, 90px);
+    color: #bbc5dc;
+    background: transparent;
+    border: 0;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    pointer-events: none;
+}
+
+.console-light {
+    top: auto;
+    bottom: 0;
+    left: 41%;
+    width: 18%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    box-shadow: 0 0 13px rgba(223, 193, 123, 0.72);
+}
+
+.cockpit-footer {
+    z-index: 3;
+    bottom: 17.4%;
+    color: #9eaccb;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    pointer-events: none;
+}
+
+@media (max-width: 900px) {
+    .cockpit-display {
+        left: 4%;
+        right: 4%;
+        grid-template-columns: minmax(128px, 0.72fr) minmax(310px, 2fr) minmax(128px, 0.72fr);
+        gap: 9px;
+    }
+
+    .side-panel {
+        padding: 14px 11px;
+    }
+
+    .panel-label,
+    .side-panel span {
+        font-size: 8px;
+        letter-spacing: 0.1em;
+    }
+}
+
+@media (max-width: 700px) {
+    .launch-platform {
+        height: 19%;
+    }
+
+    .rocket {
+        --rocket-scale: 0.82;
+        --rocket-end-scale: 0.6724;
+        transform: translateX(-50%) scale(var(--rocket-scale));
+        transform-origin: 50% 100%;
+    }
+
+    .launch-caption {
+        top: 10%;
+        padding: 0 14px;
+        letter-spacing: 2px;
+    }
+
+    .launch-caption h1 {
+        letter-spacing: 4px;
+    }
+
+    .skip-button {
+        right: 16px;
+        bottom: 16px;
+        font-size: 10px;
+    }
+
+    .space-window {
+        inset: 2% 1% 20%;
+    }
+
+    .planet {
+        top: 12%;
+        right: 8%;
+        width: clamp(190px, 48vw, 330px);
+    }
+
+    .planet-glow {
+        top: 9%;
+        right: 3%;
+        width: clamp(220px, 56vw, 380px);
+    }
+
+    .cockpit-frame {
+        padding: 16px 16px 0;
+    }
+
+    .cockpit-frame::after {
+        height: 19%;
+    }
+
+    .top-frame {
+        padding: 3px 6px 10px;
+        font-size: 8px;
+        letter-spacing: 0.1em;
+    }
+
+    .cockpit-display {
+        left: 6%;
+        right: 6%;
+        bottom: 21%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .side-panel {
+        display: block;
+        min-height: 52px;
+        padding: 8px 12px;
+    }
+
+    .left-panel {
+        display: none;
+    }
+
+    .right-panel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+        gap: 3px 8px;
+    }
+
+    .right-panel .panel-label {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding: 0 0 4px;
+    }
+
+    .right-panel span:not(.panel-label) {
+        margin: 0;
+        text-align: center;
+    }
+
+    .right-panel strong {
+        margin: 0;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .main-panel {
+        min-height: 250px;
+        padding: 17px 14px;
+    }
+
+    .main-panel h1 {
+        font-size: clamp(27px, 7vw, 38px);
+    }
+
+    .menu-subtitle {
+        font-size: 8px;
+        letter-spacing: 0.07em;
+    }
+
+    .main-menu {
+        gap: 6px;
+    }
+
+    .menu-button {
+        flex: 1 1 calc(50% - 6px);
+        padding: 9px 6px;
+        font-size: 8px;
+    }
+
+    .bottom-console {
+        height: 16%;
+        gap: 12px;
+        padding: 0 7%;
+        font-size: 7px;
+        letter-spacing: 0.08em;
+    }
+
+    .cockpit-footer {
+        bottom: 16.4%;
+        left: 6%;
+        right: 6%;
+        font-size: 7px;
+        letter-spacing: 0.06em;
+    }
+}
+
+@media (max-width: 420px) {
+    .cockpit-display {
+        left: 4%;
+        right: 4%;
+        bottom: 21%;
+    }
+}
+
+
+    /* =================================
+       FIRST-PERSON PIXEL COCKPIT
+    ================================= */
+
+    :root {
+        --ship-accent: #bbc1c8;
+    }
+
+    #cockpit-scene {
+        color: #e6e5df;
+        background: #17191c;
+        --ship-metal-shadow: #202327;
+        --ship-metal-mid: #555b61;
+        --ship-metal-light: #9da2a5;
+        --ship-metal-glint: #d3d5d2;
+        --ship-screen: #071321;
+    }
+
+    .cockpit-art {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
+
+    .cockpit-sign {
+        position: absolute;
+        z-index: 1;
+        top: 3.5%;
+        left: 50%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 12px;
+        color: #a7aaa9;
+        background: #383c40;
+        border: 2px solid #747a7d;
+        box-shadow: inset 0 0 0 2px #282c30, 0 3px 0 #111417;
+        font-size: clamp(7px, 0.75vw, 10px);
+        letter-spacing: 0.15em;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .cockpit-sign i {
+        width: 6px;
+        height: 6px;
+        background: var(--ship-accent);
+        box-shadow: 0 0 8px color-mix(in srgb, var(--ship-accent) 70%, transparent);
+    }
+
+    .cockpit-stations {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+    }
+
+    .station {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+        color: #e1e2dc;
+        background: transparent;
+        border: 0;
+        text-align: left;
+        cursor: pointer;
+        transition: filter 140ms ease, transform 140ms ease;
+    }
+
+    .station:hover,
+    .station:focus-visible {
+        z-index: 3;
+        filter: brightness(1.34);
+    }
+
+    .station:active {
+        transform: translateY(2px);
+    }
+
+    .station-screen {
+        position: relative;
+        display: flex;
+        min-width: 0;
+        height: calc(100% - 16px);
+        flex: 0 0 auto;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        overflow: hidden;
+        padding: 9px 10px;
+        color: #d8dfdf;
+        background:
+            repeating-linear-gradient(0deg, transparent 0 4px, rgba(162, 187, 190, 0.055) 4px 5px),
+            linear-gradient(180deg, #10232a 0%, #09171f 100%);
+        border: 1px solid #687175;
+        box-shadow:
+            inset 0 0 0 3px #282d31,
+            inset 0 0 0 5px #42484c,
+            inset 0 0 12px rgba(2, 8, 13, 0.9),
+            0 0 0 2px #202428,
+            0 3px 0 #111417;
+        transition: box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .station-screen::before {
+        position: absolute;
+        inset: 7px;
+        content: "";
+        border: 1px solid color-mix(in srgb, var(--ship-accent) 36%, transparent);
+        opacity: 0.42;
+        pointer-events: none;
+    }
+
+    .station-screen::after {
+        position: absolute;
+        top: 7px;
+        right: 8px;
+        width: 4px;
+        height: 4px;
+        content: "";
+        background: var(--ship-accent);
+        box-shadow: 7px 0 0 #626a6c, 0 0 7px color-mix(in srgb, var(--ship-accent) 75%, transparent);
+    }
+
+    .station:hover .station-screen,
+    .station:focus-visible .station-screen,
+    .station[aria-pressed="true"] .station-screen {
+        border-color: var(--ship-accent);
+        background:
+            repeating-linear-gradient(0deg, transparent 0 4px, color-mix(in srgb, var(--ship-accent) 8%, transparent) 4px 5px),
+            linear-gradient(180deg, color-mix(in srgb, var(--ship-accent) 21%, #10232a), #09171f 100%);
+        box-shadow:
+            inset 0 0 0 3px #282d31,
+            inset 0 0 0 5px #626a6c,
+            inset 0 0 18px color-mix(in srgb, var(--ship-accent) 38%, transparent),
+            0 0 0 2px #202428,
+            0 0 18px color-mix(in srgb, var(--ship-accent) 52%, transparent),
+            0 3px 0 #111417;
+    }
+
+    .screen-caption,
+    .screen-title,
+    .screen-mark,
+    .station-name {
+        position: relative;
+        z-index: 1;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .screen-caption {
+        color: #aab4b4;
+        font-size: clamp(6px, 0.63vw, 9px);
+        letter-spacing: 0.13em;
+    }
+
+    .screen-title {
+        color: var(--ship-accent);
+        font-size: clamp(8px, 1.08vw, 15px);
+        font-weight: bold;
+        letter-spacing: 0.09em;
+        text-shadow: 0 0 7px color-mix(in srgb, var(--ship-accent) 40%, transparent);
+    }
+
+    .screen-mark {
+        color: #8d999a;
+        font-size: clamp(6px, 0.68vw, 9px);
+        letter-spacing: 0.12em;
+    }
+
+    .station-name {
+        padding-top: 5px;
+        color: #babbb5;
+        font-size: clamp(6px, 0.58vw, 8px);
+        letter-spacing: 0.12em;
+        text-align: center;
+        text-shadow: 0 1px #141619;
+    }
+
+    .station-settings {
+        left: 3.8%;
+        top: 61%;
+        width: 16%;
+        height: 9.5%;
+    }
+
+    .station-continue {
+        left: 5.2%;
+        top: 43%;
+        width: 18%;
+        height: 13%;
+    }
+
+    .station-mission {
+        left: 36%;
+        top: 52%;
+        width: 28%;
+        height: 15%;
+    }
+
+    .station-profile {
+        right: 5.2%;
+        top: 43%;
+        width: 18%;
+        height: 13%;
+    }
+
+    .station-archive {
+        right: 3.8%;
+        top: 61%;
+        width: 18%;
+        height: 10%;
+    }
+
+    .station-feedback {
+        position: absolute;
+        z-index: 3;
+        right: 50%;
+        bottom: 3%;
+        max-width: 70%;
+        padding: 7px 12px;
+        color: #d6d7d0;
+        background: rgba(31, 35, 38, 0.92);
+        border: 1px solid #646a6c;
+        box-shadow: 0 2px 0 #111417;
+        font-size: clamp(8px, 0.75vw, 10px);
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-transform: uppercase;
+        transform: translateX(50%);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 160ms ease;
+    }
+
+    .station-feedback.is-visible {
+        opacity: 1;
+    }
+
+    @media (max-width: 700px) {
+        .cockpit-sign {
+            top: 2%;
+            padding: 4px 8px;
+            gap: 7px;
+            font-size: 7px;
+        }
+
+        .station-screen {
+            gap: 3px;
+            padding: 6px 5px;
+            box-shadow:
+                inset 0 0 0 2px #282d31,
+                inset 0 0 0 4px #42484c,
+                inset 0 0 10px rgba(2, 8, 13, 0.9),
+                0 0 0 1px #202428,
+                0 2px 0 #111417;
+        }
+
+        .station-screen::before {
+            inset: 5px;
+        }
+
+        .screen-caption,
+        .station-name {
+            font-size: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        .screen-title {
+            font-size: clamp(7px, 2.2vw, 11px);
+            letter-spacing: 0.03em;
+        }
+
+        .station-settings {
+            left: 2%;
+            width: 20%;
+        }
+
+        .station-continue {
+            left: 2%;
+            width: 22%;
+        }
+
+        .station-mission {
+            left: 31%;
+            width: 38%;
+        }
+
+        .station-profile {
+            right: 2%;
+            width: 22%;
+        }
+
+        .station-archive {
+            right: 2%;
+            width: 20%;
+        }
+
+        .station-feedback {
+            bottom: 2%;
+        }
+    }
+
+@media (max-width: 420px) {
+    .main-panel {
+        min-height: 264px;
+    }
+
+    .right-panel {
+        min-height: 48px;
+    }
+
+    .cockpit-footer span:last-child {
+        max-width: 52%;
+        text-align: right;
+    }
+
+    .bottom-console {
+        font-size: 6px;
+    }
+}
+
+@media (max-height: 650px) and (min-width: 701px) {
+    .cockpit-display {
+        bottom: 19%;
+        height: 43%;
+    }
+
+    .side-panel {
+        padding: 11px;
+    }
+
+    .main-panel {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .main-panel h1 {
+        margin: 5px 0;
+    }
+
+    .menu-subtitle {
+        margin-bottom: 8px;
+    }
+
+    .menu-button {
+        min-height: 34px;
+        padding: 7px;
+    }
+
+    .planet {
+        width: 220px;
+        height: 220px;
+    }
+}
+
+/* Cockpit controls stay aligned with the existing painted hardware. */
+.cockpit-light-wash {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 77%, var(--theme-ambient-lighting) 0%, transparent 62%);
+    opacity: var(--cockpit-light-output, 0.12);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
+.cockpit-physical-controls {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    pointer-events: none;
+}
+
+.cockpit-physical-controls button,
+.cockpit-window-hotspot {
+    color: #e7e8e2;
+    font: inherit;
+    pointer-events: auto;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.cockpit-knob {
+    position: absolute;
+    top: 79%;
+    left: 17%;
+    display: grid;
+    width: clamp(44px, 5.2vw, 66px);
+    aspect-ratio: 1;
+    place-items: center;
+    padding: 0;
+    color: #e8e8e2;
+    background:
+        radial-gradient(circle at 38% 32%, #a9afb0 0 7%, #535b60 9% 37%, #242a2e 42% 52%, #8d9291 56% 63%, #32383c 67%);
+    border: 2px solid #aeb2af;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px #353b3f, 0 3px 0 #111518, 0 0 0 2px rgba(18, 22, 24, 0.85);
+    cursor: grab;
+    touch-action: none;
+    transform: translate(-50%, -50%) rotate(var(--knob-angle, -40deg));
+    transition: filter 120ms ease, box-shadow 120ms ease;
+}
+
+.cockpit-knob::after {
+    position: absolute;
+    top: 7%;
+    left: calc(50% - 2px);
+    width: 4px;
+    height: 20%;
+    content: "";
+    background: var(--theme-highlight);
+    box-shadow: 0 0 5px var(--theme-primary);
+}
+
+.cockpit-knob:hover,
+.cockpit-knob:focus-visible,
+.cockpit-knob.is-adjusting {
+    z-index: 2;
+    filter: brightness(1.25);
+    box-shadow: inset 0 0 0 2px #353b3f, 0 3px 0 #111518, 0 0 0 3px var(--theme-primary), 0 0 16px var(--theme-primary);
+}
+
+.cockpit-knob.is-adjusting {
+    cursor: grabbing;
+}
+
+.cockpit-knob--thermal {
+    left: 83%;
+}
+
+.cockpit-switch {
+    position: absolute;
+    display: grid;
+    width: clamp(44px, 5vw, 66px);
+    height: clamp(44px, 5vh, 56px);
+    place-items: center;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.cockpit-switch::before {
+    width: 7px;
+    height: 7px;
+    content: "";
+    background: #394145;
+    border: 1px solid #a8adab;
+    box-shadow: 0 2px 0 #171b1e;
+    transition: background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.cockpit-switch[aria-checked="true"]::before {
+    background: var(--theme-primary);
+    box-shadow: 0 0 4px var(--theme-primary), 0 0 10px color-mix(in srgb, var(--theme-primary) 65%, transparent);
+    transform: translateY(-2px);
+}
+
+.cockpit-switch:hover,
+.cockpit-switch:focus-visible {
+    border-color: color-mix(in srgb, var(--theme-primary) 72%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--theme-primary) 55%, transparent);
+}
+
+.cockpit-switch--power {
+    top: 75.5%;
+    left: 6.5%;
+}
+
+.cockpit-switch--comms {
+    top: 75.5%;
+    right: 6.5%;
+}
+
+.cockpit-switch--life-support {
+    top: 88%;
+    left: 11%;
+}
+
+.cockpit-switch--thermal {
+    top: 88%;
+    right: 11%;
+}
+
+.cockpit-key {
+    position: absolute;
+    top: 70.5%;
+    display: grid;
+    width: 14.5%;
+    min-height: 44px;
+    place-items: center;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.cockpit-key--monitor {
+    left: 25.5%;
+}
+
+.cockpit-key--maintenance {
+    left: 42.7%;
+}
+
+.cockpit-key--log {
+    left: 59.9%;
+}
+
+.cockpit-key:hover,
+.cockpit-key:focus-visible {
+    background: color-mix(in srgb, var(--theme-primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--theme-primary) 70%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--theme-primary) 45%, transparent);
+}
+
+.cockpit-key-hint {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    padding: 4px 6px;
+    color: #e9e9e3;
+    background: rgba(25, 30, 33, 0.96);
+    border: 1px solid var(--theme-structural-trim);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 120ms ease;
+}
+
+.cockpit-key:hover .cockpit-key-hint,
+.cockpit-key:focus-visible .cockpit-key-hint {
+    opacity: 1;
+}
+
+.cockpit-window-hotspot {
+    position: absolute;
+    z-index: 3;
+    top: 34%;
+    left: 68%;
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    color: var(--theme-highlight);
+    background: rgba(16, 29, 39, 0.32);
+    border: 1px solid transparent;
+    border-radius: 50%;
+    font-size: 18px;
+    opacity: 0.2;
+    transform: translate(-50%, -50%);
+    transition: opacity 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.cockpit-window-hotspot:hover,
+.cockpit-window-hotspot:focus-visible,
+.cockpit-window-hotspot[aria-expanded="true"] {
+    border-color: color-mix(in srgb, var(--theme-highlight) 70%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--theme-primary) 72%, transparent);
+    opacity: 1;
+}
+
+.cockpit-observation {
+    position: absolute;
+    z-index: 5;
+    top: 12%;
+    left: 50%;
+    width: min(420px, calc(100% - 32px));
+    padding: 12px 16px;
+    color: #e7e8e2;
+    background: rgba(25, 31, 35, 0.96);
+    border: 2px solid var(--theme-structural-trim);
+    box-shadow: inset 0 0 0 3px #353c40, 0 5px 0 #111518, 0 0 20px rgba(0, 0, 0, 0.45);
+    font-size: clamp(10px, 1vw, 12px);
+    line-height: 1.5;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+.cockpit-observation[hidden],
+.cockpit-maintenance-panel[hidden],
+.cockpit-monitor-page[hidden] {
+    display: none;
+}
+
+.cockpit-maintenance-panel {
+    position: absolute;
+    z-index: 6;
+    right: 50%;
+    bottom: 3.8%;
+    width: min(520px, 42%);
+    padding: clamp(12px, 2vw, 20px);
+    color: #e2e3dd;
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 2px, transparent 2px 4px),
+        linear-gradient(145deg, #70777a, #3c4449 35%, #272e33 100%);
+    border: 3px solid #aeb1aa;
+    box-shadow: inset 0 0 0 4px #343b40, inset 0 0 0 7px #565e61, 0 8px 0 #111619;
+    transform: translateX(50%);
+}
+
+.cockpit-maintenance-panel.is-opening {
+    animation: cockpitPanelOpen 180ms steps(3, end) both;
+}
+
+.cockpit-maintenance-panel header,
+.cockpit-monitor-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cockpit-panel-kicker {
+    color: #c3ad7b;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+}
+
+.cockpit-maintenance-panel h2,
+.cockpit-monitor-header h2 {
+    margin-top: 5px;
+    color: #f0eee5;
+    font-size: clamp(12px, 1.4vw, 17px);
+    letter-spacing: 0.12em;
+    text-shadow: 2px 2px 0 #343b40;
+}
+
+.cockpit-panel-close {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    place-items: center;
+    padding: 0;
+    color: #eeece3;
+    background: #30373b;
+    border: 2px solid #a2a7a5;
+    box-shadow: inset 0 0 0 2px #4d5558, 0 3px 0 #1b2024;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.maintenance-status {
+    margin: 10px 0;
+    color: #c5d0ca;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+}
+
+.cockpit-action-button {
+    min-height: 44px;
+    padding: 7px 12px;
+    color: #f0eee5;
+    background: #30383c;
+    border: 2px solid #9fa5a3;
+    box-shadow: inset 0 0 0 2px #4d5558, 0 3px 0 #1b2024;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+}
+
+.cockpit-action-button:hover,
+.cockpit-action-button:focus-visible,
+.cockpit-panel-close:hover,
+.cockpit-panel-close:focus-visible {
+    border-color: var(--theme-primary);
+    box-shadow: inset 0 0 0 2px #4d5558, 0 0 12px color-mix(in srgb, var(--theme-primary) 60%, transparent);
+}
+
+.cockpit-systems-dialog {
+    position: fixed;
+    inset: 0;
+    width: min(600px, calc(100vw - 28px));
+    max-height: min(88vh, 680px);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    color: #e4e3dc;
+    background: transparent;
+    border: 0;
+}
+
+.cockpit-systems-dialog::backdrop {
+    background: rgba(3, 7, 12, 0.76);
+    backdrop-filter: blur(2px);
+}
+
+.cockpit-systems-panel {
+    padding: clamp(16px, 3.5vw, 28px);
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 4px),
+        linear-gradient(145deg, #70777a, #3c4449 35%, #272e33 100%);
+    border: 3px solid #aeb1aa;
+    box-shadow: inset 0 0 0 4px #343b40, inset 0 0 0 7px #565e61, 0 12px 0 #111619;
+}
+
+.cockpit-monitor-header {
+    padding-bottom: 14px;
+    border-bottom: 2px solid #909697;
+}
+
+.cockpit-simulation-notice {
+    margin: 13px 0;
+    color: #d3bd8b;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+}
+
+.cockpit-monitor-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.cockpit-monitor-tabs button {
+    min-height: 44px;
+    padding: 6px 4px;
+    color: #c9ceca;
+    background: #30373b;
+    border: 1px solid #777f80;
+    font-size: 8px;
+    letter-spacing: 0.07em;
+}
+
+.cockpit-monitor-tabs button[aria-selected="true"] {
+    color: #f0eee5;
+    background: color-mix(in srgb, var(--theme-primary) 24%, #30373b);
+    border-color: var(--theme-primary);
+    box-shadow: inset 0 0 10px color-mix(in srgb, var(--theme-primary) 24%, transparent);
+}
+
+.monitor-switch {
+    display: flex;
+    width: 100%;
+    min-height: 44px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+    padding: 8px 12px;
+    color: #e2e3dd;
+    background: #30373b;
+    border: 1px solid #838b8c;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-align: left;
+}
+
+.monitor-switch::after {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 auto;
+    content: "";
+    background: #41494c;
+    border: 1px solid #aeb2af;
+    box-shadow: 0 2px 0 #171b1e;
+    transition: background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.monitor-switch[aria-checked="true"]::after {
+    background: var(--theme-primary);
+    box-shadow: 0 0 6px var(--theme-primary), 0 0 12px color-mix(in srgb, var(--theme-primary) 65%, transparent);
+    transform: translateY(-2px);
+}
+
+.monitor-switch:hover,
+.monitor-switch:focus-visible {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--theme-primary) 45%, transparent);
+}
+
+.cockpit-monitor-page {
+    min-height: 190px;
+    padding: 14px;
+    background: rgba(19, 26, 30, 0.7);
+    border: 1px solid #778081;
+}
+
+.monitor-reading {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 2px 0 12px;
+    color: #d5d8d2;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+}
+
+.monitor-reading output,
+.monitor-slider output {
+    color: var(--theme-primary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.monitor-slider {
+    display: block;
+    margin: 16px 0 10px;
+    color: #d5d8d2;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+}
+
+.monitor-slider > span {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.monitor-slider input {
+    width: 100%;
+    accent-color: var(--theme-primary);
+    touch-action: pan-y;
+}
+
+.cockpit-monitor-page progress {
+    display: block;
+    width: 100%;
+    height: 12px;
+    margin: 16px 0;
+    accent-color: var(--theme-primary);
+}
+
+.cockpit-monitor-page p {
+    margin-top: 12px;
+    color: #b6bfbd;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+.cockpit-systems-dialog button:focus-visible,
+.cockpit-systems-dialog input:focus-visible {
+    outline: 2px solid var(--theme-primary);
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .cockpit-knob {
+        width: 44px;
+    }
+
+    .cockpit-switch--power,
+    .cockpit-switch--comms {
+        display: none;
+    }
+
+    .cockpit-key {
+        top: 70%;
+        width: 15%;
+    }
+
+    .cockpit-key--monitor {
+        left: 25%;
+    }
+
+    .cockpit-key--maintenance {
+        left: 42.5%;
+    }
+
+    .cockpit-key--log {
+        left: 60%;
+    }
+
+    .cockpit-key-hint {
+        font-size: 7px;
+    }
+
+    .cockpit-maintenance-panel {
+        width: min(520px, calc(100% - 24px));
+        bottom: 3%;
+    }
+
+    .cockpit-monitor-tabs {
+        gap: 4px;
+    }
+
+    .cockpit-monitor-tabs button {
+        font-size: 7px;
+        letter-spacing: 0;
+    }
+}

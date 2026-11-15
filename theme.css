@@ -1,0 +1,28 @@
+:root {
+    --theme-primary: #bbc1c8;
+    --theme-highlight: #e1e3df;
+    --theme-dark: #4b5359;
+    --theme-secondary: #8a969b;
+    --theme-tint: #eceeec;
+    --theme-environment-primary: #515b62;
+    --theme-environment-secondary: #879297;
+    --theme-structural-trim: #c2c8c8;
+    --theme-upholstery: #5d666c;
+    --theme-console-surface: #3f4a51;
+    --theme-ambient-lighting: #bdcbd0;
+    --theme-interface-accent: var(--theme-primary);
+    --ship-accent: var(--theme-primary);
+    --gold: var(--theme-highlight);
+    --periwinkle: var(--theme-primary);
+    --muted-blue: var(--theme-secondary);
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline-color: var(--theme-highlight, var(--gold));
+}
+
+::selection {
+    color: #101418;
+    background: var(--theme-highlight, #e1e3df);
+}

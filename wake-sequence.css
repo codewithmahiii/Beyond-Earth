@@ -1,0 +1,453 @@
+#welcome-scene.wake-scene {
+    --wake-steel: #aeb4b3;
+    --wake-dark-steel: #343c40;
+    --wake-blue: #a8c9d6;
+    --wake-amber: var(--theme-primary);
+    background: #070d15;
+    isolation: isolate;
+}
+
+.wake-cockpit-art {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: brightness(0.23) saturate(0.62) contrast(1.08);
+    transition: filter 4.7s steps(7, end);
+}
+
+.wake-darkening {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(1, 5, 9, 0.08) 3px 4px),
+        rgba(2, 7, 12, 0.3);
+    opacity: 1;
+    transition: opacity 4.8s ease-out;
+    pointer-events: none;
+}
+
+.wake-window-light {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    clip-path: polygon(19.5% 16%, 80.5% 16%, 86.5% 59.5%, 13.5% 59.5%);
+    background:
+        repeating-linear-gradient(0deg, rgba(172, 202, 212, 0.045) 0 2px, transparent 2px 6px),
+        linear-gradient(180deg, rgba(135, 174, 193, 0.12), rgba(38, 77, 100, 0.04));
+    opacity: 0;
+    transition: opacity 2.1s steps(5, end) 2.35s;
+    pointer-events: none;
+}
+
+.wake-smoke {
+    position: absolute;
+    z-index: 6;
+    inset: -4%;
+    background:
+        repeating-linear-gradient(0deg, rgba(198, 202, 195, 0.08) 0 3px, transparent 3px 7px),
+        repeating-linear-gradient(90deg, rgba(179, 187, 184, 0.78) 0 12px, rgba(127, 141, 146, 0.7) 12px 24px, rgba(89, 106, 115, 0.6) 24px 36px);
+    clip-path: polygon(
+        0 35%, 8% 35%, 8% 28%, 17% 28%, 17% 22%, 26% 22%,
+        26% 29%, 34% 29%, 34% 20%, 45% 20%, 45% 26%, 54% 26%,
+        54% 18%, 65% 18%, 65% 27%, 74% 27%, 74% 32%, 83% 32%,
+        83% 26%, 94% 26%, 94% 35%, 100% 35%, 100% 70%, 93% 70%,
+        93% 78%, 84% 78%, 84% 73%, 75% 73%, 75% 82%, 64% 82%,
+        64% 76%, 55% 76%, 55% 84%, 44% 84%, 44% 77%, 35% 77%,
+        35% 86%, 24% 86%, 24% 77%, 14% 77%, 14% 70%, 7% 70%,
+        7% 76%, 0 76%
+    );
+    opacity: 0.76;
+    pointer-events: none;
+    animation: wakeSmokeClear 1.45s steps(8, end) 180ms forwards;
+}
+
+.wake-indicators {
+    position: absolute;
+    z-index: 3;
+    top: 18.5%;
+    left: 50%;
+    display: flex;
+    gap: clamp(14px, 3vw, 42px);
+    transform: translateX(-50%);
+}
+
+.wake-indicators i {
+    width: 5px;
+    height: 5px;
+    background: #263a3f;
+    border: 1px solid #536166;
+    box-shadow: 0 0 4px rgba(153, 193, 205, 0.14);
+}
+
+.wake-indicators i:nth-child(2),
+.wake-indicators i:nth-child(6) {
+    background: #77562f;
+    border-color: #9c7744;
+    box-shadow: 0 0 6px rgba(209, 157, 82, 0.22);
+}
+
+.wake-screen {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 5px;
+    padding: 1.3%;
+    overflow: hidden;
+    background: #11191d;
+    border: 2px solid #50595a;
+    box-shadow: inset 0 0 0 2px #20282b, inset 0 0 0 4px #343d40;
+    opacity: 0.13;
+    transition: opacity 180ms steps(2, end), background-color 200ms steps(2, end);
+}
+
+.wake-screen i {
+    display: block;
+    height: 3px;
+    background: #52646a;
+    opacity: 0.32;
+}
+
+.wake-screen i:nth-child(2) {
+    width: 67%;
+}
+
+.wake-screen i:nth-child(3) {
+    width: 42%;
+}
+
+.wake-screen--nav {
+    top: 42.6%;
+    left: 4.1%;
+    width: 18.2%;
+    height: 13.7%;
+}
+
+.wake-screen--systems {
+    top: 42.6%;
+    right: 4.1%;
+    width: 18.2%;
+    height: 13.7%;
+}
+
+.wake-screen--crew {
+    top: 60%;
+    left: 2.7%;
+    width: 17.6%;
+    height: 10.1%;
+}
+
+.wake-screen--science {
+    top: 59.8%;
+    right: 2.8%;
+    width: 19.5%;
+    height: 11%;
+}
+
+.wake-status-display {
+    position: absolute;
+    z-index: 4;
+    top: 52.3%;
+    left: 50%;
+    display: grid;
+    width: min(31vw, 410px);
+    min-height: clamp(48px, 8vh, 78px);
+    place-content: center;
+    gap: 7px;
+    padding: 9px;
+    transform: translateX(-50%);
+    color: #78868a;
+    background: rgba(15, 23, 27, 0.95);
+    border: 2px solid #555e60;
+    box-shadow: inset 0 0 0 3px #252d30, 0 0 0 2px #21282b;
+    text-align: center;
+}
+
+.wake-console-pulse {
+    position: absolute;
+    z-index: 3;
+    right: 14%;
+    bottom: 25.8%;
+    left: 14%;
+    height: 3px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    background: #d7e3d6;
+    box-shadow: 0 0 5px #b5d1d0, 0 0 12px rgba(151, 209, 210, 0.6);
+    opacity: 0;
+}
+
+.wake-scene.is-activating .wake-console-pulse,
+.wake-scene.is-online .wake-console-pulse {
+    animation: wakeConsolePulse 1.05s steps(8, end) 300ms both;
+}
+
+.wake-status-kicker {
+    color: #8d9695;
+    font-size: clamp(7px, 0.75vw, 10px);
+    letter-spacing: 0.16em;
+}
+
+#wake-status {
+    color: #a4abad;
+    font-size: clamp(9px, 1vw, 13px);
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 5px rgba(170, 206, 214, 0.18);
+}
+
+.wake-console-control {
+    position: absolute;
+    z-index: 5;
+    bottom: clamp(24px, 6.5vh, 68px);
+    left: 50%;
+    display: grid;
+    justify-items: center;
+    gap: 7px;
+    min-width: 220px;
+    padding: 9px 18px 11px;
+    transform: translateX(-50%);
+    background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 4px),
+        linear-gradient(180deg, #626a6c, #353d41 44%, #252d31);
+    border: 2px solid #8a9291;
+    box-shadow: inset 0 0 0 3px #394145, inset 0 0 0 5px #535b5d, 0 6px 0 #11171a;
+    transition: border-color 300ms steps(3, end), box-shadow 300ms ease;
+}
+
+.wake-control-label,
+.wake-control-code {
+    color: #c1c4bd;
+    font-size: 8px;
+    letter-spacing: 0.17em;
+}
+
+.wake-control-code {
+    color: #8c9696;
+    font-size: 7px;
+}
+
+.wake-power-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 184px;
+    min-height: 48px;
+    padding: 9px 15px;
+    color: #e6e5dc;
+    background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 3px, transparent 3px 6px),
+        linear-gradient(180deg, #444d50, #242b2f);
+    border: 3px solid #b0b4ae;
+    box-shadow: inset 0 0 0 2px #687174, inset 0 0 0 5px #30383c, 0 4px 0 #151b1e;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-shadow: 1px 1px #111719;
+    transition: background-color 120ms steps(2, end), transform 100ms steps(2, end), box-shadow 180ms ease;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.wake-power-indicator {
+    width: 8px;
+    height: 8px;
+    background: #c28a4b;
+    border: 2px solid #e0b56d;
+    box-shadow: 0 0 7px rgba(216, 159, 83, 0.35);
+}
+
+.wake-power-button:hover:not(:disabled),
+.wake-power-button:focus-visible {
+    color: #fff3d4;
+    border-color: #d2bd8e;
+    box-shadow: inset 0 0 0 2px #7f8988, inset 0 0 0 5px #353f42, 0 4px 0 #151b1e, 0 0 12px rgba(207, 183, 132, 0.22);
+}
+
+.wake-power-button:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: inset 0 0 0 2px #687174, inset 0 0 0 5px #30383c, 0 1px 0 #151b1e;
+}
+
+.wake-power-button:focus-visible {
+    outline: 2px solid #e2cf9d;
+    outline-offset: 4px;
+}
+
+.wake-power-button:disabled {
+    cursor: default;
+}
+
+.wake-scene.is-activating .wake-cockpit-art,
+.wake-scene.is-online .wake-cockpit-art {
+    filter: brightness(0.94) saturate(0.88) contrast(1.03);
+}
+
+.wake-scene.is-activating .wake-darkening,
+.wake-scene.is-online .wake-darkening {
+    opacity: 0.12;
+}
+
+.wake-scene.is-activating .wake-window-light,
+.wake-scene.is-online .wake-window-light {
+    opacity: 1;
+}
+
+.wake-scene.is-activating .wake-screen,
+.wake-scene.is-online .wake-screen {
+    background: #1c3138;
+    border-color: #788c8d;
+    box-shadow: inset 0 0 0 2px #294149, inset 0 0 0 4px #506367, 0 0 8px rgba(138, 197, 211, 0.18);
+}
+
+.wake-screen.is-on {
+    opacity: 0.96;
+    animation: wakeScreenFlicker 520ms steps(2, end) both;
+}
+
+.wake-screen.is-on i {
+    background: #a8c9d6;
+    opacity: 0.82;
+    box-shadow: 0 0 5px rgba(137, 204, 221, 0.35);
+}
+
+.wake-screen--systems.is-on i:first-child,
+.wake-screen--science.is-on i:nth-child(2) {
+    background: var(--wake-amber);
+    box-shadow: 0 0 5px color-mix(in srgb, var(--wake-amber) 35%, transparent);
+}
+
+.wake-indicators i.is-on {
+    background: #a8c9d6;
+    border-color: #d5e5e7;
+    box-shadow: 0 0 8px rgba(145, 213, 230, 0.65);
+}
+
+.wake-indicators i:nth-child(2).is-on,
+.wake-indicators i:nth-child(6).is-on {
+    background: var(--theme-highlight);
+    border-color: #f0d39a;
+    box-shadow: 0 0 8px rgba(230, 173, 91, 0.65);
+}
+
+.wake-scene.is-activating .wake-power-button,
+.wake-scene.is-online .wake-power-button {
+    color: #fff1ca;
+    border-color: #e5c786;
+    background: #5b5140;
+    box-shadow: inset 0 0 0 2px #8d7956, inset 0 0 0 5px #37332b, 0 2px 0 #151b1e, 0 0 14px rgba(222, 174, 94, 0.4);
+}
+
+.wake-scene.is-activating .wake-power-indicator,
+.wake-scene.is-online .wake-power-indicator {
+    background: #efc46e;
+    border-color: #fff0bf;
+    box-shadow: 0 0 10px 3px rgba(238, 191, 102, 0.66);
+}
+
+.wake-scene.is-online .wake-status-display {
+    border-color: #a3bdba;
+    box-shadow: inset 0 0 0 3px #293a3e, 0 0 12px rgba(138, 203, 210, 0.27);
+}
+
+.wake-scene.is-online #wake-status {
+    color: #d7eddf;
+    text-shadow: 0 0 8px rgba(154, 226, 190, 0.6);
+}
+
+.wake-scene.is-online .wake-control-label::after {
+    content: " · ONLINE";
+    color: #a9d8bd;
+}
+
+@keyframes wakeScreenFlicker {
+    0% { opacity: 0.16; }
+    24% { opacity: 0.9; }
+    39% { opacity: 0.3; }
+    61% { opacity: 1; }
+    78% { opacity: 0.72; }
+    100% { opacity: 0.96; }
+}
+
+@keyframes wakeSmokeClear {
+    0% { opacity: 0.76; transform: scale(1.02); }
+    45% { opacity: 0.62; }
+    100% { opacity: 0; transform: scale(1.08); }
+}
+
+@keyframes wakeConsolePulse {
+    0% { opacity: 0.9; transform: scaleX(0); }
+    78% { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(1); }
+}
+
+@media (max-width: 700px) {
+    .wake-screen {
+        border-width: 1px;
+        gap: 3px;
+    }
+
+    .wake-screen i {
+        height: 2px;
+    }
+
+    .wake-status-display {
+        top: 53.2%;
+        width: 38vw;
+        min-height: 44px;
+        padding: 5px;
+    }
+
+    .wake-status-kicker {
+        font-size: 6px;
+        letter-spacing: 0.08em;
+    }
+
+    #wake-status {
+        font-size: clamp(7px, 1.8vw, 10px);
+        letter-spacing: 0.06em;
+    }
+
+    .wake-console-control {
+        bottom: max(18px, env(safe-area-inset-bottom));
+        min-width: 190px;
+        padding: 7px 12px 9px;
+    }
+
+    .wake-power-button {
+        min-width: 166px;
+        min-height: 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wake-cockpit-art {
+        transition-duration: 1ms;
+    }
+
+    .wake-darkening,
+    .wake-window-light,
+    .wake-screen,
+    .wake-console-control,
+    .wake-power-button {
+        transition-duration: 1ms;
+    }
+
+    .wake-screen.is-on {
+        animation-duration: 1ms;
+    }
+
+    .wake-scene.is-activating .wake-console-pulse,
+    .wake-scene.is-online .wake-console-pulse {
+        animation-duration: 1ms;
+        animation-delay: 0ms;
+    }
+}
