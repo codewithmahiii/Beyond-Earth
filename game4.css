@@ -1,0 +1,979 @@
+.landing-zone {
+    --lz-bg: #171a20;
+    --lz-panel: #242830;
+    --lz-metal: #303641;
+    --lz-silver: #c7cbd2;
+    --lz-lavender: #c9b9e9;
+    --lz-mint: #a9e2ce;
+    --lz-pink: #e9b8cb;
+    --lz-red: #ff777d;
+    --lz-orange: #ffb477;
+    --lz-gold: #f2d18a;
+    --lz-ink: #121419;
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    color: #e8e9ed;
+    background: var(--lz-bg);
+    font-family: "Space Mono", "Courier New", monospace;
+}
+
+body.has-active-minigame .landing-zone.beyond-minigame {
+    padding: 0.6rem;
+}
+
+.game4-page {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background: var(--lz-bg, #171a20);
+}
+
+#game4-root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.landing-zone--standalone {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 1.25rem;
+}
+
+.landing-zone *,
+.landing-zone *::before,
+.landing-zone *::after {
+    box-sizing: border-box;
+}
+
+.landing-zone__shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(275px, 0.82fr) minmax(460px, 1.4fr);
+    gap: 1rem;
+    width: min(1440px, 100%);
+    max-height: calc(100dvh - 2.5rem);
+    min-height: min(760px, calc(100dvh - 2.5rem));
+    margin: auto;
+    padding: 1rem;
+    overflow: auto;
+    background:
+        linear-gradient(90deg, transparent 0 49.8%, rgba(201, 185, 233, 0.06) 50%, transparent 50.2%),
+        #1c2027;
+    border: 3px solid #737985;
+    box-shadow:
+        inset 0 0 0 3px #353a44,
+        inset 0 0 0 6px #101318,
+        0 8px 0 #090b0f,
+        0 18px 60px rgba(0, 0, 0, 0.48);
+}
+
+.landing-zone__briefing,
+.landing-zone__cockpit {
+    min-width: 0;
+    background: var(--lz-panel);
+    border: 2px solid #606672;
+    box-shadow: inset 0 0 0 3px #30353e, inset 0 0 0 5px #1a1d23;
+}
+
+.landing-zone__briefing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(0.8rem, 1.4vw, 1.2rem);
+}
+
+.landing-zone__brandline,
+.landing-zone__section-label,
+.landing-zone__eyebrow {
+    color: var(--lz-lavender);
+    font-family: "Press Start 2P", "Courier New", monospace;
+    font-size: 0.58rem;
+    line-height: 1.8;
+    letter-spacing: 0.07em;
+}
+
+.landing-zone__brandline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid #555b66;
+}
+
+.landing-zone__active {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--lz-mint);
+    font: 700 0.58rem "Space Mono", "Courier New", monospace;
+    letter-spacing: 0.12em;
+}
+
+.landing-zone__active::before {
+    width: 7px;
+    height: 7px;
+    content: "";
+    background: var(--lz-mint);
+    box-shadow: 0 0 10px var(--lz-mint);
+    animation: lzPulse 1s steps(2, end) infinite;
+}
+
+.landing-zone__title {
+    margin: 0;
+    color: var(--lz-silver);
+    font-family: "Press Start 2P", "Courier New", monospace;
+    font-size: clamp(1.05rem, 2.4vw, 1.75rem);
+    line-height: 1.65;
+    letter-spacing: 0.04em;
+    text-shadow: 3px 3px #595367;
+}
+
+.landing-zone__intro {
+    margin: 0;
+    color: #c4c6cc;
+    font-size: 0.76rem;
+    line-height: 1.65;
+}
+
+.landing-zone__meter-panel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    padding: 0.7rem;
+    background: #1b1e24;
+    border: 1px solid #616772;
+    box-shadow: inset 0 0 0 2px #272c34;
+}
+
+.landing-zone__meter-panel > span {
+    color: #bfc2c9;
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+}
+
+.landing-zone__meter-panel strong {
+    color: var(--lz-gold);
+    font: 700 0.88rem "Space Mono", "Courier New", monospace;
+}
+
+.landing-zone__progress {
+    grid-column: 1 / -1;
+    height: 11px;
+    padding: 2px;
+    background: #101217;
+    border: 1px solid #747b86;
+}
+
+.landing-zone__progress-fill {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, var(--lz-mint) 0 10px, #76bda8 10px 12px);
+    transition: width 180ms linear;
+}
+
+.landing-zone__shields {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: flex-end;
+}
+
+.landing-zone__shield {
+    display: inline-block;
+    width: 17px;
+    height: 20px;
+    background: var(--lz-mint);
+    clip-path: polygon(50% 0, 94% 19%, 86% 68%, 50% 100%, 14% 68%, 6% 19%);
+    filter: drop-shadow(0 0 4px rgba(169, 226, 206, 0.35));
+}
+
+.landing-zone__shield.is-lost {
+    background: #565b65;
+    filter: none;
+}
+
+.landing-zone__robot-card {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 116px;
+    padding: 0.7rem;
+    background: #2a2933;
+    border: 1px solid #80748f;
+    box-shadow: inset 0 0 0 2px #413947;
+}
+
+.landing-zone__robot {
+    position: relative;
+    width: 60px;
+    height: 77px;
+    margin: auto;
+    animation: lzRobotBob 1.8s steps(2, end) infinite;
+}
+
+.landing-zone__robot-antenna {
+    position: absolute;
+    top: 0;
+    left: 28px;
+    width: 4px;
+    height: 12px;
+    background: #aeb3be;
+}
+
+.landing-zone__robot-antenna::before {
+    position: absolute;
+    top: -4px;
+    left: -3px;
+    width: 10px;
+    height: 6px;
+    content: "";
+    background: var(--lz-pink);
+    box-shadow: 0 0 8px var(--lz-pink);
+}
+
+.landing-zone__robot-head {
+    position: absolute;
+    top: 11px;
+    left: 8px;
+    width: 45px;
+    height: 31px;
+    background: #bdc2cb;
+    border: 4px solid #777e8a;
+    box-shadow: inset 0 -4px #999fac;
+}
+
+.landing-zone__robot-eyes {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+.landing-zone__robot-eyes i {
+    width: 5px;
+    height: 6px;
+    background: var(--lz-mint);
+    box-shadow: 0 0 6px var(--lz-mint);
+    animation: lzBlink 3.2s steps(1, end) infinite;
+}
+
+.landing-zone__robot-body {
+    position: absolute;
+    top: 43px;
+    left: 15px;
+    width: 32px;
+    height: 25px;
+    background: #9299a5;
+    border: 4px solid #666d79;
+}
+
+.landing-zone__robot-body::after {
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    width: 8px;
+    height: 7px;
+    content: "";
+    background: var(--lz-lavender);
+}
+
+.landing-zone__robot-leg {
+    position: absolute;
+    top: 66px;
+    width: 7px;
+    height: 10px;
+    background: #8a909c;
+}
+
+.landing-zone__robot-leg--left {
+    left: 19px;
+}
+
+.landing-zone__robot-leg--right {
+    left: 37px;
+}
+
+.landing-zone__robot-arm {
+    position: absolute;
+    top: 48px;
+    width: 8px;
+    height: 16px;
+    background: #adb3bd;
+}
+
+.landing-zone__robot-arm--left {
+    left: 5px;
+}
+
+.landing-zone__robot-arm--right {
+    right: 3px;
+}
+
+.landing-zone__robot-name {
+    margin: 0 0 0.25rem;
+    color: var(--lz-pink);
+    font: 0.62rem "Press Start 2P", "Courier New", monospace;
+    line-height: 1.6;
+}
+
+.landing-zone__robot-message {
+    margin: 0;
+    color: #e1dee6;
+    font-size: 0.7rem;
+    line-height: 1.55;
+}
+
+.landing-zone__log {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 116px;
+    padding: 0.65rem;
+    background: #181b21;
+    border: 1px solid #545b66;
+}
+
+.landing-zone__log-title {
+    margin: 0 0 0.4rem;
+    color: #bdb4cb;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+}
+
+.landing-zone__log-list {
+    display: grid;
+    align-content: start;
+    gap: 0.24rem;
+    padding: 0;
+    margin: 0;
+    color: #aeb2bb;
+    font-size: 0.61rem;
+    line-height: 1.4;
+    list-style: none;
+}
+
+.landing-zone__log-list li {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 0.35rem;
+}
+
+.landing-zone__log-list time {
+    color: var(--lz-lavender);
+}
+
+.landing-zone__cockpit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: clamp(0.7rem, 1.3vw, 1rem);
+}
+
+.landing-zone__cockpit-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid #5b616c;
+}
+
+.landing-zone__cockpit-header h2 {
+    margin: 0;
+    color: #e1d8f1;
+    font: 0.83rem/1.7 "Press Start 2P", "Courier New", monospace;
+}
+
+.landing-zone__cockpit-subtitle {
+    margin: 0.25rem 0 0;
+    color: #aeb3bd;
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+}
+
+.landing-zone__scan-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    color: var(--lz-mint);
+    background: #1b2425;
+    border: 1px solid #5a8175;
+    font: 700 0.58rem "Space Mono", "Courier New", monospace;
+    letter-spacing: 0.08em;
+}
+
+.landing-zone__scan-indicator::before {
+    width: 6px;
+    height: 6px;
+    content: "";
+    background: var(--lz-mint);
+    box-shadow: 0 0 8px var(--lz-mint);
+    animation: lzPulse 0.8s steps(2, end) infinite;
+}
+
+.landing-zone__radar-frame {
+    position: relative;
+    display: grid;
+    flex: 1;
+    min-height: 300px;
+    place-items: center;
+    padding: 0.4rem;
+    overflow: hidden;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 15px, rgba(199, 203, 210, 0.025) 15px 16px),
+        #191d23;
+    border: 2px solid #747b87;
+    box-shadow: inset 0 0 0 4px #292e37, inset 0 0 0 6px #111419;
+}
+
+.landing-zone__radar {
+    display: block;
+    width: min(100%, 490px);
+    max-height: 100%;
+    aspect-ratio: 1;
+    image-rendering: pixelated;
+}
+
+.landing-zone__radar-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.45rem 1rem;
+    padding: 0.35rem 0;
+    color: #bfc2c9;
+    font-size: 0.61rem;
+}
+
+.landing-zone__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.landing-zone__legend-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--lz-red);
+    box-shadow: 0 0 6px currentColor;
+}
+
+.landing-zone__legend-dot--asteroid {
+    background: var(--lz-orange);
+}
+
+.landing-zone__legend-dot--rare {
+    background: var(--lz-gold);
+}
+
+.landing-zone__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 39px;
+    padding: 0.55rem 0.7rem;
+    color: var(--lz-mint);
+    background: #1a2222;
+    border: 1px solid #54766d;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+}
+
+.landing-zone__warning::before {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    content: "";
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+}
+
+.landing-zone__warning[data-kind="danger"] {
+    color: var(--lz-red);
+    background: #2b2024;
+    border-color: #9c535c;
+}
+
+.landing-zone__warning[data-kind="attention"] {
+    color: var(--lz-orange);
+    background: #2a2520;
+    border-color: #8a6b4c;
+}
+
+.landing-zone__warning[data-kind="reward"] {
+    color: var(--lz-gold);
+    background: #2b2820;
+    border-color: #8a774c;
+}
+
+.landing-zone__flight-controls {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.landing-zone__trajectory {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.landing-zone__button {
+    min-height: 40px;
+    padding: 0.55rem 0.6rem;
+    color: #d7d9de;
+    background: #353b45;
+    border: 2px solid #777f8c;
+    box-shadow: inset 0 0 0 2px #242831, 0 3px 0 #12151a;
+    font: 700 0.63rem "Space Mono", "Courier New", monospace;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.landing-zone__button:hover:not(:disabled),
+.landing-zone__button:focus-visible {
+    color: #f3edfc;
+    border-color: var(--lz-lavender);
+    box-shadow: inset 0 0 0 2px #353044, 0 0 12px rgba(201, 185, 233, 0.32);
+}
+
+.landing-zone__button:active:not(:disabled) {
+    transform: translateY(2px);
+}
+
+.landing-zone__button:disabled {
+    opacity: 0.44;
+    cursor: not-allowed;
+}
+
+.landing-zone__button.is-active {
+    color: #221e2c;
+    background: var(--lz-lavender);
+    border-color: #e5dcf4;
+    box-shadow: inset 0 0 0 2px #ad9bc9, 0 3px 0 #665978;
+}
+
+.landing-zone__utility {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.landing-zone__button--scan {
+    color: #222b29;
+    background: var(--lz-mint);
+    border-color: #d3f0e5;
+    box-shadow: inset 0 0 0 2px #84c4ae, 0 3px 0 #365f53;
+}
+
+.landing-zone__button--boost {
+    color: #302614;
+    background: var(--lz-gold);
+    border-color: #f8e4b7;
+    box-shadow: inset 0 0 0 2px #c5a867, 0 3px 0 #6c572d;
+}
+
+.landing-zone__button--boost.is-active {
+    color: #29211b;
+    background: var(--lz-orange);
+    border-color: #ffe0c4;
+}
+
+.landing-zone__flight-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.45rem 0.6rem;
+    color: #b9bdc6;
+    background: #1d2027;
+    border: 1px solid #515762;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+}
+
+.landing-zone__flight-status strong {
+    color: var(--lz-lavender);
+}
+
+.landing-zone__toast {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    left: 50%;
+    max-width: min(80%, 520px);
+    padding: 0.8rem 1rem;
+    color: #211b2b;
+    background: var(--lz-gold);
+    border: 2px solid #fff0c8;
+    box-shadow: 0 4px 0 #66552f, 0 0 25px rgba(242, 209, 138, 0.25);
+    font: 700 0.68rem/1.5 "Space Mono", "Courier New", monospace;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.landing-zone__toast[hidden] {
+    display: none;
+}
+
+.landing-zone__overlay {
+    position: absolute;
+    z-index: 5;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(15, 17, 22, 0.9);
+}
+
+.landing-zone__overlay[hidden] {
+    display: none;
+}
+
+.landing-zone__overlay-card {
+    width: min(720px, 100%);
+    padding: clamp(1rem, 3vw, 2rem);
+    color: #e5e6eb;
+    background: #242830;
+    border: 3px solid #9298a4;
+    box-shadow: inset 0 0 0 4px #383d47, inset 0 0 0 7px #1a1d23, 0 8px 0 #090b0e;
+    text-align: center;
+}
+
+.landing-zone__overlay-card h2 {
+    margin: 0.4rem 0 0.8rem;
+    color: var(--lz-lavender);
+    font: clamp(0.9rem, 2.6vw, 1.5rem)/1.8 "Press Start 2P", "Courier New", monospace;
+}
+
+.landing-zone__overlay-card p {
+    margin: 0 auto 1rem;
+    max-width: 580px;
+    color: #c7c9d0;
+    font-size: 0.78rem;
+    line-height: 1.65;
+}
+
+.landing-zone__instructions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin: 1rem 0;
+}
+
+.landing-zone__instruction {
+    padding: 0.65rem 0.45rem;
+    background: #1b1e24;
+    border: 1px solid #646b77;
+    color: #c8cbd2;
+    font-size: 0.66rem;
+    line-height: 1.55;
+}
+
+.landing-zone__instruction strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--lz-mint);
+    font-family: "Press Start 2P", "Courier New", monospace;
+    font-size: 0.57rem;
+}
+
+.landing-zone__overlay .landing-zone__button {
+    min-height: 47px;
+    padding-inline: 1rem;
+    color: #27222f;
+    background: var(--lz-lavender);
+    border-color: #eee5fa;
+    font-size: 0.72rem;
+}
+
+.landing-zone__result-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 1rem 0;
+}
+
+.landing-zone__result-stat {
+    min-width: 135px;
+    padding: 0.75rem;
+    background: #191c22;
+    border: 1px solid #68707c;
+}
+
+.landing-zone__result-stat span {
+    display: block;
+    color: #b5b9c2;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+}
+
+.landing-zone__result-stat strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--lz-gold);
+    font-size: 1.1rem;
+}
+
+.landing-zone__badge {
+    display: inline-block;
+    padding: 0.55rem 0.75rem;
+    color: #332819;
+    background: var(--lz-gold);
+    border: 2px solid #fff0c8;
+    font: 0.59rem/1.7 "Press Start 2P", "Courier New", monospace;
+}
+
+.landing-zone__badge[hidden] {
+    display: none;
+}
+
+.landing-zone__robot.is-alert .landing-zone__robot-antenna::before {
+    background: var(--lz-red);
+    box-shadow: 0 0 10px var(--lz-red);
+}
+
+.landing-zone__robot.is-happy .landing-zone__robot-antenna::before {
+    background: var(--lz-gold);
+    box-shadow: 0 0 10px var(--lz-gold);
+}
+
+.landing-zone__button:focus-visible {
+    outline: 2px solid #fff0bc;
+    outline-offset: 3px;
+}
+
+@keyframes lzPulse {
+    50% { opacity: 0.45; }
+}
+
+@keyframes lzRobotBob {
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes lzBlink {
+    0%, 96%, 100% { transform: scaleY(1); }
+    98% { transform: scaleY(0.15); }
+}
+
+@media (max-width: 960px) {
+    .landing-zone__shell {
+        grid-template-columns: minmax(250px, 0.76fr) minmax(400px, 1.2fr);
+        gap: 0.65rem;
+        padding: 0.65rem;
+    }
+
+    .landing-zone__utility {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .landing-zone--standalone {
+        display: block;
+        padding: 0.5rem;
+    }
+
+    .landing-zone__overlay {
+        position: fixed;
+    }
+
+    .landing-zone__shell {
+        grid-template-columns: 1fr;
+        width: 100%;
+        max-height: none;
+        min-height: 0;
+        padding: 0.55rem;
+    }
+
+    .landing-zone__briefing {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .landing-zone__log-list {
+        max-height: 110px;
+        overflow: auto;
+    }
+
+    .landing-zone__radar-frame {
+        min-height: 0;
+    }
+
+    .landing-zone__radar {
+        width: min(100%, 410px);
+    }
+
+    .landing-zone__cockpit-header h2 {
+        font-size: 0.68rem;
+    }
+}
+
+@media (min-width: 761px) and (max-height: 820px) {
+    body.has-active-minigame .mission-play-host .landing-zone.beyond-minigame .landing-zone__shell {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        min-height: 0;
+        grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.65fr);
+        gap: 0.55rem;
+        padding: 0.55rem;
+        overflow: auto;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__briefing {
+        min-height: 0;
+        gap: 0.45rem;
+        padding: 0.55rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__title {
+        font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+        line-height: 1.4;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__intro {
+        font-size: 0.68rem;
+        line-height: 1.45;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__meter-panel {
+        gap: 0.3rem 0.6rem;
+        padding: 0.45rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__robot-card {
+        grid-template-columns: 58px 1fr;
+        min-height: 78px;
+        gap: 0.5rem;
+        padding: 0.45rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__robot {
+        transform: scale(0.82);
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__log {
+        min-height: 58px;
+        padding: 0.45rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__log-list {
+        max-height: 78px;
+        overflow: auto;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__cockpit {
+        display: grid;
+        grid-template-areas:
+            "header header"
+            "radar legend"
+            "radar warning"
+            "radar controls"
+            "radar status";
+        grid-template-columns: minmax(0, 1.3fr) minmax(230px, 0.9fr);
+        grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+        min-height: 0;
+        gap: 0.4rem;
+        padding: 0.55rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__cockpit-header {
+        grid-area: header;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__radar-frame {
+        grid-area: radar;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__radar-legend {
+        grid-area: legend;
+        padding: 0.2rem 0;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__warning {
+        grid-area: warning;
+        min-height: 34px;
+        padding: 0.4rem 0.55rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__flight-controls {
+        grid-area: controls;
+        gap: 0.4rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__flight-status {
+        grid-area: status;
+        padding: 0.35rem 0.5rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__utility {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.35rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__button {
+        min-height: 36px;
+        padding: 0.4rem 0.3rem;
+        font-size: 0.56rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__radar-frame {
+        min-height: 0;
+        padding: 0.25rem;
+    }
+
+    body.has-active-minigame .mission-play-host .landing-zone__radar {
+        width: min(100%, 350px);
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        aspect-ratio: 1;
+    }
+}
+
+@media (max-width: 460px) {
+    .landing-zone__brandline {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .landing-zone__cockpit-header {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .landing-zone__instructions {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-zone__trajectory {
+        gap: 0.3rem;
+    }
+
+    .landing-zone__button {
+        padding-inline: 0.35rem;
+        font-size: 0.56rem;
+    }
+
+    .landing-zone__toast {
+        width: 90%;
+        max-width: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .landing-zone *,
+    .landing-zone *::before,
+    .landing-zone *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}

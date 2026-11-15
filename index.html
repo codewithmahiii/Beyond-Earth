@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d25">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>Beyond Earth | Space Mission</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/launch.css">
+    <link rel="stylesheet" href="css/audio.css">
+    <link rel="stylesheet" href="css/wake-sequence.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/personnel.css">
+    <link rel="stylesheet" href="css/minigames.css">
+    <link rel="stylesheet" href="game4.css">
+    <link rel="stylesheet" href="css/robot-companion.css">
+    <link rel="stylesheet" href="css/mission.css">
+    <link rel="stylesheet" href="css/mission-experience.css">
+    <link rel="stylesheet" href="css/celestial.css">
+</head>
+
+<body>
+
+    <main id="game">
+
+        <!-- OPENING: ROCKET LAUNCH -->
+        <section id="launch-scene" class="scene active">
+            <canvas class="launch-art" aria-hidden="true"></canvas>
+
+            <div class="launch-caption">
+                <p>SPACE EXPLORATION PROGRAM</p>
+                <h1>MISSION CONTROL</h1>
+                <span>Preparing for launch...</span>
+            </div>
+
+            <button id="toggle-launch-audio" class="launch-audio-button" type="button" aria-pressed="false">
+                DISABLE AUDIO
+            </button>
+            <button id="skip-intro" class="skip-button" type="button">SKIP INTRO →</button>
+        </section>
+
+
+        <!-- WAKE THE SHIP -->
+        <section id="welcome-scene" class="scene wake-scene" aria-label="Spaceship cockpit activation">
+            <canvas class="cockpit-art wake-cockpit-art" aria-hidden="true"></canvas>
+            <div class="wake-darkening" aria-hidden="true"></div>
+            <div class="wake-window-light" aria-hidden="true"></div>
+            <div class="wake-smoke" aria-hidden="true"></div>
+
+            <div class="wake-indicators" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+
+            <div class="wake-screen wake-screen--nav" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="wake-screen wake-screen--systems" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="wake-screen wake-screen--crew" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="wake-screen wake-screen--science" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="wake-console-pulse" aria-hidden="true"></div>
+
+            <div class="wake-status-display">
+                <p class="wake-status-kicker">FLIGHT DECK · POWER BUS</p>
+                <p id="wake-status" role="status" aria-live="polite">AWAITING PILOT INPUT</p>
+            </div>
+
+            <div class="wake-console-control">
+                <span class="wake-control-label">PRIMARY POWER</span>
+                <button id="wake-power-button" class="wake-power-button" type="button" aria-describedby="wake-status">
+                    <span class="wake-power-indicator" aria-hidden="true"></span>
+                    <span>POWER ON</span>
+                </button>
+                <span class="wake-control-code" aria-hidden="true">BUS · 01 / MANUAL</span>
+            </div>
+        </section>
+
+
+        <!-- FIRST-PERSON COCKPIT -->
+        <section id="cockpit-scene" class="scene">
+            <canvas class="cockpit-art" aria-hidden="true"></canvas>
+
+            <div class="cockpit-sign" aria-hidden="true">
+                <span>BEYOND EARTH</span>
+                <i></i>
+                <span>FLIGHT DECK · 01</span>
+            </div>
+
+            <nav class="cockpit-stations" aria-label="Ship stations">
+                <button type="button" class="station station-settings"
+                    data-action="settings" aria-pressed="false">
+                    <span class="station-screen">
+                        <span class="screen-caption">SHIP SYSTEMS</span>
+                        <span class="screen-title">SETTINGS</span>
+                        <span class="screen-mark" aria-hidden="true">···</span>
+                    </span>
+                    <span class="station-name">AUX · 05</span>
+                </button>
+
+                <button type="button" class="station station-continue"
+                    data-action="continue" aria-pressed="false">
+                    <span class="station-screen">
+                        <span class="screen-caption">NAV COMPUTER</span>
+                        <span class="screen-title">CONTINUE</span>
+                        <span class="screen-mark" aria-hidden="true">◈</span>
+                    </span>
+                    <span class="station-name">NAV · 02</span>
+                </button>
+
+                <button type="button" class="station station-mission"
+                    data-action="new-mission" aria-pressed="false">
+                    <span class="station-screen">
+                        <span class="screen-caption">MISSION CONTROL</span>
+                        <span class="screen-title">NEW MISSION</span>
+                        <span class="screen-mark" aria-hidden="true">▶</span>
+                    </span>
+                    <span class="station-name">PRIMARY CONSOLE · 01</span>
+                </button>
+
+                <button type="button" class="station station-run-mission"
+                    data-action="run-mission" aria-pressed="false" disabled>
+                    <span class="station-screen">
+                        <span class="screen-caption" data-run-caption>FLIGHT STATUS UNKNOWN</span>
+                        <span class="screen-title" data-run-title>RUN MISSION</span>
+                        <span class="screen-mark" data-run-mark aria-hidden="true">STANDBY</span>
+                    </span>
+                    <span class="station-name">LAUNCH CONSOLE · 06</span>
+                </button>
+
+                <button type="button" class="station station-profile"
+                    data-action="profile" aria-pressed="false">
+                    <span class="station-screen">
+                        <span class="screen-caption">CREW RECORDS</span>
+                        <span class="screen-title">ASTRONAUT</span>
+                        <span class="screen-mark" aria-hidden="true">ID · 00</span>
+                    </span>
+                    <span class="station-name">IDENT · 03</span>
+                </button>
+
+                <button type="button" class="station station-archive"
+                    data-action="archive" aria-pressed="false">
+                    <span class="station-screen">
+                        <span class="screen-caption">SCIENCE BAY</span>
+                        <span class="screen-title">ARCHIVE</span>
+                        <span class="screen-mark" aria-hidden="true">DATA</span>
+                    </span>
+                    <span class="station-name">RESEARCH · 04</span>
+                </button>
+            </div>
+
+            <output class="station-feedback" aria-live="polite"></output>
+
+            <div class="cockpit-light-wash" aria-hidden="true"></div>
+            <div class="cockpit-physical-controls" aria-label="Physical cockpit controls">
+                <button class="cockpit-knob" type="button" role="slider" tabindex="0"
+                    data-cockpit-interaction="cabin-lighting" aria-label="Cabin lighting"
+                    aria-valuemin="0" aria-valuemax="100" aria-valuenow="65" aria-valuetext="65 percent">
+                    <span class="sr-only">Cabin lighting dial. Use arrow keys or drag to adjust.</span>
+                </button>
+                <button class="cockpit-knob cockpit-knob--thermal" type="button" role="slider" tabindex="0"
+                    data-cockpit-interaction="thermal-control" aria-label="Thermal control"
+                    aria-valuemin="0" aria-valuemax="100" aria-valuenow="52" aria-valuetext="52 percent">
+                    <span class="sr-only">Thermal control dial. Use arrow keys or drag to adjust.</span>
+                </button>
+
+                <button class="cockpit-switch cockpit-switch--power" type="button" role="switch"
+                    data-cockpit-interaction="power-bus" aria-checked="true" aria-label="Primary power bus">
+                    <span class="sr-only">Toggle the casual cockpit power bus.</span>
+                </button>
+                <button class="cockpit-switch cockpit-switch--comms" type="button" role="switch"
+                    data-cockpit-interaction="communications-link" aria-checked="false" aria-label="Communications link">
+                    <span class="sr-only">Toggle the simulated communications link.</span>
+                </button>
+                <button class="cockpit-switch cockpit-switch--life-support" type="button" role="switch"
+                    data-cockpit-interaction="life-support" aria-checked="true" aria-label="Life-support monitor">
+                    <span class="sr-only">Toggle the simulated life-support display.</span>
+                </button>
+                <button class="cockpit-switch cockpit-switch--thermal" type="button" role="switch"
+                    data-cockpit-interaction="thermal-bus" aria-checked="true" aria-label="Thermal control system">
+                    <span class="sr-only">Toggle the simulated thermal control system.</span>
+                </button>
+
+                <button class="cockpit-key cockpit-key--monitor" type="button"
+                    data-cockpit-interaction="systems-monitor" aria-label="Open spacecraft systems monitor">
+                    <span class="cockpit-key-hint" aria-hidden="true">SYSTEMS</span>
+                </button>
+                <button class="cockpit-key cockpit-key--maintenance" type="button"
+                    data-cockpit-interaction="maintenance-panel" aria-label="Open maintenance panel">
+                    <span class="cockpit-key-hint" aria-hidden="true">SERVICE</span>
+                </button>
+                <button class="cockpit-key cockpit-key--log" type="button"
+                    data-cockpit-interaction="window-note" aria-label="Read the pilot's window note"
+                    aria-expanded="false">
+                    <span class="cockpit-key-hint" aria-hidden="true">FLIGHT NOTE</span>
+                </button>
+            </div>
+
+            <button class="cockpit-window-hotspot" type="button"
+                data-cockpit-interaction="window-note" aria-label="Inspect the planet through the forward window"
+                aria-expanded="false">
+                <span aria-hidden="true">✦</span>
+            </button>
+            <output class="cockpit-observation" role="status" aria-live="polite" hidden></output>
+
+            <section class="cockpit-maintenance-panel" aria-labelledby="maintenance-title" hidden>
+                <header>
+                    <div>
+                        <span class="cockpit-panel-kicker">LOWER CONSOLE · SERVICE ACCESS</span>
+                        <h2 id="maintenance-title">MAINTENANCE PANEL</h2>
+                    </div>
+                    <button class="cockpit-panel-close" type="button"
+                        data-cockpit-interaction="maintenance-panel" aria-label="Close maintenance panel">×</button>
+                </header>
+                <p class="maintenance-status" aria-live="polite">LOCAL CHECK READY · NO FLIGHT DATA CONNECTED</p>
+                <button class="cockpit-action-button" type="button"
+                    data-cockpit-interaction="maintenance-check">RUN LOCAL SELF-CHECK</button>
+            </section>
+
+            <dialog id="cockpit-systems-monitor" class="cockpit-systems-dialog"
+                aria-labelledby="cockpit-monitor-title">
+                <div class="cockpit-systems-panel">
+                    <header class="cockpit-monitor-header">
+                        <div>
+                            <span class="cockpit-panel-kicker">FLIGHT DECK · AUXILIARY DISPLAY</span>
+                            <h2 id="cockpit-monitor-title">SPACECRAFT SYSTEMS</h2>
+                        </div>
+                        <button class="cockpit-panel-close" type="button"
+                            data-cockpit-interaction="systems-monitor"
+                            data-monitor-action="close" aria-label="Close systems monitor">×</button>
+                    </header>
+                    <p class="cockpit-simulation-notice">SIMULATED READINGS · SANDBOX ONLY · NO MISSION RESOURCES AFFECTED</p>
+                    <div class="cockpit-monitor-tabs" role="tablist" aria-label="Spacecraft systems">
+                        <button type="button" role="tab" data-monitor-tab="power"
+                            data-cockpit-interaction="systems-monitor" data-monitor-action="tab"
+                            data-monitor-page="power" aria-selected="true">POWER</button>
+                        <button type="button" role="tab" data-monitor-tab="thermal"
+                            data-cockpit-interaction="systems-monitor" data-monitor-action="tab"
+                            data-monitor-page="thermal" aria-selected="false">THERMAL</button>
+                        <button type="button" role="tab" data-monitor-tab="communications"
+                            data-cockpit-interaction="systems-monitor" data-monitor-action="tab"
+                            data-monitor-page="communications" aria-selected="false">COMMS</button>
+                        <button type="button" role="tab" data-monitor-tab="life-support"
+                            data-cockpit-interaction="systems-monitor" data-monitor-action="tab"
+                            data-monitor-page="life-support" aria-selected="false">LIFE SUPPORT</button>
+                    </div>
+                    <section class="cockpit-monitor-page" data-monitor-view="power" role="tabpanel">
+                        <div class="monitor-reading">
+                            <span>POWER BUS</span>
+                            <output data-reading="power-status">ONLINE</output>
+                        </div>
+                        <button class="monitor-switch" type="button" role="switch"
+                            data-cockpit-interaction="power-bus" aria-checked="true">
+                            PRIMARY POWER BUS
+                        </button>
+                        <div class="monitor-reading">
+                            <span>SIMULATED DISTRIBUTION</span>
+                            <output data-reading="power-distribution">70%</output>
+                        </div>
+                        <div class="monitor-reading">
+                            <span>SIMULATED LOAD</span>
+                            <output data-reading="power-load">71%</output>
+                        </div>
+                        <label class="monitor-slider">
+                            <span>BUS DISTRIBUTION <output data-reading="power-slider-value">70%</output></span>
+                            <input type="range" min="0" max="100" step="5" value="70"
+                                data-cockpit-interaction="power-distribution"
+                                aria-label="Simulated power distribution">
+                        </label>
+                        <p>Adjusting this sandbox value changes only the display readings.</p>
+                    </section>
+                    <section class="cockpit-monitor-page" data-monitor-view="thermal" role="tabpanel" hidden>
+                        <div class="monitor-reading">
+                            <span>THERMAL INDEX</span>
+                            <output data-reading="thermal-index">52%</output>
+                        </div>
+                        <div class="monitor-reading">
+                            <span>CONTROL SYSTEM</span>
+                            <output data-reading="thermal-status">ACTIVE</output>
+                        </div>
+                        <progress data-reading-bar="thermal" max="100" value="52" aria-label="Simulated thermal index"></progress>
+                        <p>The dial adjusts a fictional comfort index; this is not a thermal simulation.</p>
+                    </section>
+                    <section class="cockpit-monitor-page" data-monitor-view="communications" role="tabpanel" hidden>
+                        <button class="monitor-switch" type="button" role="switch"
+                            data-cockpit-interaction="communications-link" aria-checked="false">
+                            COMMUNICATIONS LINK
+                        </button>
+                        <div class="monitor-reading">
+                            <span>LINK STATUS</span>
+                            <output data-reading="communications-status">STANDBY</output>
+                        </div>
+                        <div class="monitor-reading">
+                            <span>SIMULATED SIGNAL</span>
+                            <output data-reading="communications-signal">0%</output>
+                        </div>
+                        <progress data-reading-bar="communications" max="100" value="0" aria-label="Simulated communications signal"></progress>
+                        <p>Toggle the communications switch on the right console bank to change this reading.</p>
+                    </section>
+                    <section class="cockpit-monitor-page" data-monitor-view="life-support" role="tabpanel" hidden>
+                        <div class="monitor-reading">
+                            <span>MONITOR STATUS</span>
+                            <output data-reading="life-support-status">ACTIVE</output>
+                        </div>
+                        <div class="monitor-reading">
+                            <span>SIMULATED CABIN INDEX</span>
+                            <output data-reading="life-support-index">96%</output>
+                        </div>
+                        <progress data-reading-bar="life-support" max="100" value="96" aria-label="Simulated life-support index"></progress>
+                        <p>This monitor is a casual cockpit toy and is not connected to mission state.</p>
+                    </section>
+                </div>
+            </dialog>
+        </section>
+
+        <!-- ASTRONAUT PROFILE -->
+        <section id="missions-scene" class="scene missions-scene" aria-labelledby="missions-title">
+            <canvas id="mission-galaxy-background" class="mission-galaxy-background" aria-hidden="true"></canvas>
+            <header class="missions-header">
+                <div>
+                    <p class="missions-kicker">FLIGHT DECK · MISSION CONTROL</p>
+                    <h1 id="missions-title">MISSION CONSOLE</h1>
+                </div>
+                <button id="missions-back" class="missions-back" type="button">← BACK TO SHIP</button>
+            </header>
+
+            <div class="missions-layout">
+                <section id="mission-builder-panel" class="mission-panel mission-builder-panel" aria-labelledby="mission-builder-title">
+                    <div class="mission-panel-heading">
+                        <div>
+                            <p class="missions-kicker">FLIGHT PLANNING · <span id="mission-stage-number">01 / 12</span></p>
+                            <h2 id="mission-builder-title">Mission Headquarters</h2>
+                        </div>
+                        <output id="mission-draft-status" class="mission-status" aria-live="polite">READY FOR PLANNING</output>
+                    </div>
+                    <nav id="mission-progress" class="mission-progress" aria-label="Mission planning stages"></nav>
+                    <div class="mission-planning-layout">
+                        <section id="mission-stage-wrap" class="mission-stage-wrap" aria-live="polite">
+                            <p id="mission-stage-kicker" class="missions-kicker"></p>
+                            <div class="mission-stage-title-row">
+                                <h3 id="mission-stage-title"></h3>
+                                <button id="mission-notebook-open" class="mission-notebook-trigger" type="button"
+                                    aria-label="Open engineering notebook" title="Open engineering notebook">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M5 4h13v16H5zM8 4v16M11 8h4M11 12h4M11 16h3"
+                                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
+                                        <path d="M3 7h2M3 12h2M3 17h2" fill="none" stroke="currentColor"
+                                            stroke-width="1.5"></path>
+                                    </svg>
+                                </button>
+                                <button id="mission-companion-settings-open" class="mission-notebook-trigger mission-companion-settings-trigger"
+                                    type="button" aria-label="Open astronaut settings" title="Astronaut settings">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"
+                                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
+                                        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p id="mission-stage-description" class="mission-stage-description"></p>
+                            <section id="mission-astronaut-bubble" class="mission-astronaut__bubble"
+                                aria-label="Astronaut's message" hidden>
+                                <button id="mission-astronaut-dismiss" class="mission-astronaut__dismiss"
+                                    type="button" aria-label="Dismiss astronaut message">×</button>
+                                <span id="mission-astronaut-speaker" class="mission-astronaut__speaker"></span>
+                                <div id="mission-astronaut-message-wrap">
+                                    <p id="mission-astronaut-message" aria-live="polite"></p>
+                                    <button id="mission-astronaut-note" class="mission-astronaut__note"
+                                        type="button" hidden>OPEN FIELD NOTE →</button>
+                                </div>
+                            </section>
+                            <div id="mission-companion-layer" class="mission-companion-layer"
+                                aria-label="Astronaut companion">
+                                <div id="mission-astronaut" class="mission-astronaut" data-expression="idle"
+                                    data-facing="right" data-gesture="idle">
+                                    <button id="mission-astronaut-character" class="mission-astronaut__character"
+                                        type="button" aria-label="Meet your astronaut"
+                                        aria-controls="mission-astronaut-bubble" aria-expanded="false">
+                                        <svg class="mission-astronaut__sprite" viewBox="0 0 32 32" role="img"
+                                            aria-label="Pixel-art astronaut companion">
+                                            <rect class="mission-astronaut__antenna" x="15" y="1" width="2" height="4"></rect>
+                                            <rect class="mission-astronaut__antenna-light" x="14" y="0" width="4" height="2"></rect>
+                                            <rect class="mission-astronaut__pack" x="5" y="13" width="5" height="12"></rect>
+                                            <rect class="mission-astronaut__suit" x="9" y="19" width="14" height="11"></rect>
+                                            <rect class="mission-astronaut__boot" x="7" y="28" width="8" height="3"></rect>
+                                            <rect class="mission-astronaut__boot" x="18" y="28" width="8" height="3"></rect>
+                                            <rect class="mission-astronaut__helmet" x="7" y="4" width="18" height="18"></rect>
+                                            <rect class="mission-astronaut__visor" x="10" y="7" width="12" height="11"></rect>
+                                            <rect class="mission-astronaut__visor-glint" x="11" y="8" width="3" height="2"></rect>
+                                            <rect class="mission-astronaut__eye mission-astronaut__eye--left" x="13" y="12" width="2" height="3"></rect>
+                                            <rect class="mission-astronaut__eye mission-astronaut__eye--right" x="18" y="12" width="2" height="3"></rect>
+                                            <path class="mission-astronaut__mouth mission-astronaut__mouth--smile"
+                                                d="M13 16h2v1h4v-1h2" fill="none"></path>
+                                            <path class="mission-astronaut__mouth mission-astronaut__mouth--flat"
+                                                d="M14 17h6" fill="none"></path>
+                                            <path class="mission-astronaut__mouth mission-astronaut__mouth--o"
+                                                d="M15 16h4v2h-4z" fill="none"></path>
+                                            <rect class="mission-astronaut__pointing-arm" x="21" y="22" width="7" height="3"></rect>
+                                            <rect class="mission-astronaut__patch" x="19" y="22" width="3" height="3"></rect>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="mission-stage-content" class="mission-stage-content"></div>
+                        </section>
+                        <aside id="mission-blueprint" class="mission-blueprint" aria-labelledby="mission-blueprint-title">
+                            <div class="mission-blueprint-heading">
+                                <span id="mission-blueprint-heading-label" class="missions-kicker">LIVE MISSION BLUEPRINT</span>
+                                <span id="mission-blueprint-emblem" aria-hidden="true">✦</span>
+                            </div>
+                            <section id="mission-blueprint-view" class="mission-blueprint-view">
+                                <canvas id="mission-blueprint-canvas" width="192" height="120" role="img"
+                                    aria-label="Pixel-art preview of the developing mission and spacecraft"></canvas>
+                                <h3 id="mission-blueprint-title">UNFILED EXPEDITION</h3>
+                                <p id="mission-blueprint-destination">Choose a destination to begin.</p>
+                                <ul id="mission-blueprint-summary" class="mission-blueprint-summary"></ul>
+                                <div class="mission-blueprint-readout">
+                                    <span>DESIGN CHECK</span>
+                                    <output id="mission-review-status" class="mission-status" data-status="incomplete">NOT REVIEWED</output>
+                                </div>
+                                <ul id="mission-review-issues" class="mission-issue-list" aria-live="polite"></ul>
+                            </section>
+                        </aside>
+                    </div>
+                    <output id="mission-form-feedback" class="mission-feedback" role="status" aria-live="polite"></output>
+                    <div class="mission-form-actions mission-wizard-actions">
+                        <button id="mission-previous" class="mission-button" type="button" hidden>← PREVIOUS</button>
+                        <button id="mission-save" class="mission-button" type="button">SAVE &amp; RETURN TO SHIP</button>
+                        <span class="mission-autosave-note">FLIGHT NOTES SAVE AS YOU PLAN</span>
+                        <button id="mission-next" class="mission-button mission-button--primary" type="button">BEGIN PLANNING →</button>
+                        <button id="mission-approve" class="mission-button mission-button--primary" type="button" hidden>APPROVE MISSION</button>
+                        <button id="mission-draft-cancel" class="mission-button mission-button--danger" type="button" hidden>DISCARD DRAFT</button>
+                    </div>
+                </section>
+
+                <section id="mission-flight-panel" class="mission-panel mission-flight-panel" aria-labelledby="mission-flight-title" hidden>
+                    <div class="mission-panel-heading">
+                        <div>
+                            <p class="missions-kicker">MISSION TELEMETRY</p>
+                            <h2 id="mission-flight-title">Mission status</h2>
+                        </div>
+                        <output id="mission-flight-status" class="mission-status"></output>
+                    </div>
+                    <p id="mission-flight-summary" class="mission-summary"></p>
+                    <dl id="mission-resource-readings" class="mission-resources"></dl>
+                    <section class="mission-operations" aria-labelledby="mission-operations-title">
+                        <div class="mission-panel-heading">
+                            <div>
+                                <p class="missions-kicker">GENERATED FLIGHT PLAN</p>
+                                <h3 id="mission-operations-title">Mission phases</h3>
+                            </div>
+                            <output id="mission-phase-count" class="mission-status"></output>
+                        </div>
+                        <ol id="mission-phase-list" class="mission-phase-list"></ol>
+                        <button id="mission-next-phase" class="mission-button" type="button" hidden>ADVANCE TO NEXT PHASE</button>
+                    </section>
+                    <section class="mission-science" aria-labelledby="mission-science-title">
+                        <div class="mission-panel-heading">
+                            <div>
+                                <p class="missions-kicker">SCIENCE OPERATIONS</p>
+                                <h3 id="mission-science-title">Research activity</h3>
+                            </div>
+                        </div>
+                        <p id="mission-minigame-description">Run a mission-linked science activity when your spacecraft and objectives support it.</p>
+                        <div class="mission-form-actions">
+                            <button id="mission-play-science" class="mission-button mission-button--primary" type="button" hidden>RUN SPECTRUM DETECTIVE</button>
+                            <button id="mission-play-cosmic-claw" class="mission-button" type="button" hidden>PLAY COSMIC CLAW</button>
+                            <button id="mission-play-radar-defence" class="mission-button" type="button" hidden>PLAY RADAR DEFENCE</button>
+                            <button id="mission-end-science" class="mission-button" type="button" hidden>END ACTIVITY</button>
+                        </div>
+                        <div id="mission-minigame-host" class="mission-minigame-host" hidden></div>
+                    </section>
+                    <output id="mission-flight-feedback" class="mission-feedback" role="status" aria-live="polite"></output>
+                    <div class="mission-form-actions mission-flight-actions">
+                        <button id="mission-launch" class="mission-button mission-button--primary" type="button" hidden>START DEPLOYMENT</button>
+                        <button id="mission-pause" class="mission-button" type="button" hidden>PAUSE MISSION</button>
+                        <button id="mission-resume" class="mission-button mission-button--primary" type="button" hidden>RESUME MISSION</button>
+                        <button id="mission-complete" class="mission-button mission-button--primary" type="button" hidden>COMPLETE MISSION</button>
+                        <button id="mission-cancel" class="mission-button mission-button--danger" type="button" hidden>CANCEL MISSION</button>
+                    </div>
+                </section>
+
+                <section class="mission-panel mission-history-panel" aria-labelledby="mission-history-title">
+                    <div class="mission-panel-heading">
+                        <div>
+                            <p class="missions-kicker">FLIGHT RECORDS</p>
+                            <h2 id="mission-history-title">Mission history</h2>
+                        </div>
+                    </div>
+                    <ol id="mission-history-list" class="mission-history-list"></ol>
+                </section>
+            </div>
+            <dialog id="mission-notebook-dialog" class="mission-notebook-dialog"
+                aria-labelledby="mission-notebook-title">
+                <article class="mission-journal">
+                    <div class="mission-journal__rings" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="mission-journal__paper">
+                        <header class="mission-journal__header">
+                            <div>
+                                <p class="mission-journal__eyebrow">FIELD NOTES · <span id="mission-notebook-owner">ASTRONAUT'S</span> JOURNAL</p>
+                                <h2 id="mission-notebook-title">The Little Space Notebook</h2>
+                            </div>
+                            <button id="mission-notebook-close" class="mission-journal__close" type="button"
+                                aria-label="Close engineering notebook">×</button>
+                        </header>
+                        <div class="mission-journal__tools">
+                            <label class="mission-visually-hidden" for="mission-notebook-search">Find a field note</label>
+                            <input id="mission-notebook-search" type="search" maxlength="80"
+                                placeholder="Find a note..." autocomplete="off">
+                            <label class="mission-visually-hidden" for="mission-notebook-discipline">Choose a topic</label>
+                            <select id="mission-notebook-discipline" aria-label="Filter by topic">
+                                <option value="">All topics</option>
+                                <option value="Mission Design">Mission design</option>
+                                <option value="Orbital Mechanics">Orbits</option>
+                                <option value="Science Payload">Science tools</option>
+                                <option value="Propulsion">Propulsion</option>
+                                <option value="Power">Power</option>
+                                <option value="Communications">Communications</option>
+                                <option value="Navigation">Navigation</option>
+                                <option value="Thermal">Thermal</option>
+                                <option value="Systems Engineering">Spacecraft systems</option>
+                            </select>
+                        </div>
+                        <div id="mission-notebook-page" class="mission-journal__page" aria-live="polite"></div>
+                        <nav class="mission-journal__navigation" aria-label="Notebook pages">
+                            <button id="mission-notebook-previous" type="button" aria-label="Previous notebook page">← PREVIOUS</button>
+                            <output id="mission-notebook-page-count" aria-live="polite"></output>
+                            <button id="mission-notebook-next" type="button" aria-label="Next notebook page">NEXT →</button>
+                        </nav>
+                    </div>
+                </article>
+            </dialog>
+            <dialog id="mission-astronaut-name-dialog" class="mission-astronaut-name-dialog"
+                aria-labelledby="mission-astronaut-name-title">
+                <article class="mission-astronaut-name-card">
+                    <button id="mission-astronaut-name-later" class="mission-astronaut-name__later"
+                        type="button">MAYBE LATER</button>
+                    <div class="mission-astronaut-name__art" aria-hidden="true"></div>
+                    <p class="mission-journal__eyebrow">A NEW CREW MATE</p>
+                    <h2 id="mission-astronaut-name-title">What should I call myself?</h2>
+                    <p class="mission-astronaut-name__copy">Mochi, Cosmo, Nova—or a name of your own.</p>
+                    <form id="mission-astronaut-name-form" class="mission-astronaut__name-form">
+                        <label class="mission-visually-hidden" for="mission-astronaut-nickname">Astronaut nickname</label>
+                        <input id="mission-astronaut-nickname" type="text" maxlength="24"
+                            autocomplete="off" placeholder="Your astronaut's nickname" required>
+                        <button type="submit">LET'S GO</button>
+                    </form>
+                </article>
+            </dialog>
+            <dialog id="mission-companion-settings-dialog" class="mission-companion-settings-dialog"
+                aria-labelledby="mission-companion-settings-title">
+                <article class="mission-companion-settings-card">
+                    <header class="mission-companion-settings__header">
+                        <div>
+                            <p class="mission-journal__eyebrow">FLIGHT BUDDY</p>
+                            <h2 id="mission-companion-settings-title">Crew mate settings</h2>
+                        </div>
+                        <button id="mission-companion-settings-close" class="mission-companion-settings__close"
+                            type="button" aria-label="Close astronaut settings">×</button>
+                    </header>
+                    <p class="mission-companion-settings__intro">Make your little co-pilot feel right at home.</p>
+                    <fieldset class="mission-companion-settings__list">
+                        <legend class="mission-visually-hidden">Astronaut behavior preferences</legend>
+                        <label class="mission-companion-setting" for="mission-companion-free-roaming">
+                            <span><strong>Free roaming</strong><small>Wander between safe spots on game screens.</small></span>
+                            <input id="mission-companion-free-roaming" type="checkbox" data-companion-setting="freeRoaming">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-visible">
+                            <span><strong>Astronaut visibility</strong><small>Show your crew mate on every game screen.</small></span>
+                            <input id="mission-companion-visible" type="checkbox" data-companion-setting="visible">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-educational-guidance">
+                            <span><strong>Educational guidance</strong><small>Offer short hints about your design.</small></span>
+                            <input id="mission-companion-educational-guidance" type="checkbox" data-companion-setting="educationalGuidance">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-playful-reactions">
+                            <span><strong>Playful reactions</strong><small>Show little expressions and gestures.</small></span>
+                            <input id="mission-companion-playful-reactions" type="checkbox" data-companion-setting="playfulReactions">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-sound-effects">
+                            <span><strong>Sound effects</strong><small>Play optional co-pilot sounds.</small></span>
+                            <input id="mission-companion-sound-effects" type="checkbox" data-companion-setting="soundEffects">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-follow-interactions">
+                            <span><strong>Follow player interactions</strong><small>Move closer to the choice being discussed.</small></span>
+                            <input id="mission-companion-follow-interactions" type="checkbox" data-companion-setting="followPlayerInteractions">
+                        </label>
+                        <label class="mission-companion-setting" for="mission-companion-speech-frequency">
+                            <span><strong>Speech frequency</strong><small>How often I chime in between important moments.</small></span>
+                            <select id="mission-companion-speech-frequency" data-companion-setting="speechBubbleFrequency"
+                                aria-label="Astronaut speech frequency">
+                                <option value="quiet">Quiet</option>
+                                <option value="balanced">Balanced</option>
+                                <option value="chatty">Chatty</option>
+                            </select>
+                        </label>
+                    </fieldset>
+                    <output id="mission-companion-settings-status" class="mission-companion-settings__status"
+                        aria-live="polite">Changes save automatically.</output>
+                </article>
+            </dialog>
+        </section>
+
+        <dialog id="mission-dossier-dialog" class="mission-dossier-dialog" aria-labelledby="mission-dossier-title">
+            <article id="mission-dossier-folder" class="mission-dossier-folder">
+                <div class="mission-dossier-cover" aria-hidden="true">
+                    <div class="mission-folder-tab">BEYOND EARTH · MISSION FILE</div>
+                    <div class="mission-folder-cover-art">
+                        <span class="mission-folder-stamp">FLIGHT<br>APPROVAL</span>
+                        <span class="mission-folder-sparkle mission-folder-sparkle--one">✦</span>
+                        <span class="mission-folder-sparkle mission-folder-sparkle--two">✦</span>
+                        <div id="mission-dossier-cover-emblem" class="mission-folder-emblem"></div>
+                        <strong id="mission-dossier-cover-name"></strong>
+                        <span id="mission-dossier-cover-destination"></span>
+                    </div>
+                </div>
+                <header class="mission-dossier-header">
+                    <div>
+                        <p class="mission-dossier-kicker">OFFICIAL FLIGHT FOLDER</p>
+                        <h2 id="mission-dossier-title">Your mission file</h2>
+                    </div>
+                    <button id="mission-dossier-close" class="mission-dossier-close" type="button" aria-label="Close mission file">×</button>
+                </header>
+                <nav id="mission-dossier-pages" class="mission-dossier-pages" role="tablist" aria-label="Mission file pages">
+                    <button type="button" role="tab" data-dossier-page="0" aria-selected="true">COVER</button>
+                    <button type="button" role="tab" data-dossier-page="1" aria-selected="false">SCIENCE</button>
+                    <button type="button" role="tab" data-dossier-page="2" aria-selected="false">SPACECRAFT</button>
+                    <button type="button" role="tab" data-dossier-page="3" aria-selected="false">FLIGHT PLAN</button>
+                </nav>
+                <section id="mission-dossier-content" class="mission-dossier-content" role="tabpanel"
+                    aria-live="polite" aria-labelledby="mission-dossier-page-title"></section>
+                <output id="mission-dossier-feedback" class="mission-dossier-feedback" role="status" aria-live="polite"></output>
+                <footer class="mission-dossier-actions">
+                    <button id="mission-dossier-edit" class="mission-experience-button mission-experience-button--quiet" type="button">BACK TO EDITING</button>
+                    <span id="mission-dossier-page-count" class="mission-dossier-page-count">PAGE 1 / 4</span>
+                    <button id="mission-dossier-previous" class="mission-experience-button mission-experience-button--quiet" type="button" disabled>← PREVIOUS</button>
+                    <button id="mission-dossier-next" class="mission-experience-button" type="button">NEXT PAGE →</button>
+                    <button id="mission-dossier-confirm" class="mission-experience-button mission-experience-button--approve" type="button">APPROVE MISSION ✦</button>
+                </footer>
+            </article>
+        </dialog>
+
+        <section id="mission-play-scene" class="scene mission-play-scene" aria-label="Mission gameplay scene">
+            <canvas id="mission-play-canvas" class="mission-play-canvas" aria-hidden="true"></canvas>
+
+            <div class="mission-play-overlay" aria-live="polite">
+                <div class="mission-play-header">
+                    <span class="missions-kicker">MISSION LAUNCH</span>
+                    <h2 id="mission-play-mission-name">MISSION NAME</h2>
+                    <span id="mission-play-destination">DESTINATION</span>
+                </div>
+                <p id="mission-play-status" class="mission-play-status">MISSION AUTHORISED</p>
+                <button id="mission-play-skip" class="mission-experience-button" type="button">SKIP TO GAMEPLAY</button>
+            </div>
+
+            <div id="mission-play-astronaut" class="mission-play-astronaut" aria-hidden="true"></div>
+
+            <div class="mission-play-hud" aria-live="polite">
+                <div class="mission-play-hud__left">
+                    <span id="mission-play-hud-name">MISSION</span>
+                    <span id="mission-play-hud-destination">DESTINATION</span>
+                </div>
+                <div class="mission-play-hud__center">
+                    <span id="mission-play-hud-activity">Mission activity</span>
+                </div>
+                <div class="mission-play-hud__right">
+                    <button id="mission-play-pause" type="button">PAUSE</button>
+                </div>
+            </div>
+
+            <div id="mission-play-host" class="mission-play-host" hidden></div>
+        </section>
+
+        <section id="personnel-scene" class="scene personnel-scene" aria-labelledby="personnel-title">
+            <canvas class="cockpit-art personnel-cockpit-art" aria-hidden="true"></canvas>
+            <div class="personnel-room-dim" aria-hidden="true"></div>
+            <div class="personnel-drawer" aria-hidden="true">
+                <span class="drawer-rivet drawer-rivet--left"></span>
+                <span class="drawer-rivet drawer-rivet--right"></span>
+                <span class="drawer-pull"></span>
+                <span class="drawer-label">FLIGHT NOTES</span>
+            </div>
+            <div class="personnel-folder" aria-hidden="true">
+                <span>MY FLIGHT FOLDER</span>
+                <i></i>
+            </div>
+
+            <article id="personnel-document" class="personnel-document" aria-label="Astronaut profile">
+                <header class="personnel-header">
+                    <div class="personnel-heading">
+                        <span class="profile-overline">YOUR LITTLE CORNER OF THE GALAXY</span>
+                        <h1 id="personnel-title">ASTRONAUT PROFILE</h1>
+                    </div>
+                    <button id="personnel-close" class="personnel-close" type="button" aria-label="Return to cockpit">
+                        <span aria-hidden="true">←</span> BACK TO SHIP
+                    </button>
+                </header>
+
+                <div class="personnel-content">
+                    <section class="profile-card" aria-label="Your astronaut identity">
+                        <div class="personnel-portrait" role="img" aria-label="Pixel-art astronaut portrait placeholder">
+                            <span class="portrait-sparkle portrait-sparkle--one" aria-hidden="true"></span>
+                            <span class="portrait-sparkle portrait-sparkle--two" aria-hidden="true"></span>
+                            <span class="portrait-helmet" aria-hidden="true">
+                                <span class="portrait-face">
+                                    <i class="portrait-eye portrait-eye--left"></i>
+                                    <i class="portrait-eye portrait-eye--right"></i>
+                                    <i class="portrait-cheek portrait-cheek--left"></i>
+                                    <i class="portrait-cheek portrait-cheek--right"></i>
+                                    <i class="portrait-mouth"></i>
+                                </span>
+                                <span class="portrait-shine"></span>
+                            </span>
+                            <span class="portrait-suit" aria-hidden="true">
+                                <span></span>
+                            </span>
+                            <span class="portrait-patch" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="profile-details">
+                            <p class="profile-greeting">HELLO, ASTRONAUT!</p>
+                            <div class="personnel-fields">
+                                <label class="personnel-field">
+                                    <span>FULL NAME</span>
+                                    <input id="personnel-full-name" type="text" maxlength="60" autocomplete="name"
+                                        placeholder="Your name">
+                                    <output id="personnel-name-preview" class="personnel-live-name">YOUR NAME</output>
+                                </label>
+
+                                <label class="personnel-field">
+                                    <span>AGENT NAME</span>
+                                    <input id="personnel-agent-name" type="text" maxlength="24" autocomplete="nickname"
+                                        placeholder="Your callsign">
+                                    <output id="personnel-agent-preview" class="personnel-live-agent">YOUR CALLSIGN</output>
+                                </label>
+                            </div>
+                            <div class="profile-meta">
+                                <div class="profile-id">
+                                    <span>ASTRONAUT ID</span>
+                                    <output id="personnel-astronaut-id">BE-0000000000000000</output>
+                                </div>
+                                <div class="profile-rank">
+                                    <span>RANK</span>
+                                    <strong id="personnel-rank">RECRUIT</strong>
+                                </div>
+                                <div class="profile-favourite" aria-label="Selected personal sticker">
+                                    <div id="personnel-emblem-preview" aria-label="Selected emblem"></div>
+                                    <strong id="personnel-emblem-name">STAR</strong>
+                                </div>
+                            </div>
+                            <div class="profile-expression">
+                                    <span class="profile-expression-label">EXPRESSION</span>
+                                    <div id="personnel-expression-options" class="personnel-expression-options"
+                                        role="radiogroup" aria-label="Choose your astronaut's expression"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="personnel-choice-section" aria-labelledby="personnel-colour-label">
+                        <div class="personnel-section-heading">
+                            <h2 id="personnel-colour-label">YOUR COLOUR</h2>
+                            <output id="personnel-colour-preview">BLACK / GREY</output>
+                        </div>
+                        <div id="personnel-colour-options" class="personnel-colour-options" role="radiogroup"
+                            aria-label="Choose your colour"></div>
+                    </section>
+
+                    <section class="personnel-choice-section personnel-emblem-section" aria-labelledby="personnel-emblem-label">
+                        <div class="personnel-section-heading">
+                            <h2 id="personnel-emblem-label">PICK A STICKER</h2>
+                        </div>
+                        <div id="personnel-emblem-options" class="personnel-emblem-options" role="radiogroup"
+                            aria-label="Choose your personal sticker"></div>
+                    </section>
+                </div>
+
+                <footer class="personnel-footer">
+                    <div class="profile-save-area">
+                        <output id="personnel-save-feedback" class="personnel-save-feedback" role="status" aria-live="polite"></output>
+                        <button id="personnel-save" class="personnel-save" type="button">
+                            <span aria-hidden="true">✦</span> SAVE PROFILE
+                        </button>
+                    </div>
+                </footer>
+            </article>
+
+            <div id="personnel-save-stamp" class="personnel-save-stamp" aria-hidden="true">
+                <span>✦</span><strong>SAVED!</strong><span>✦</span>
+            </div>
+        </section>
+
+    </main>
+
+    <dialog id="mission-deployment" class="mission-deployment"
+        aria-labelledby="mission-deployment-title" aria-describedby="mission-deployment-copy">
+        <div class="mission-deployment-panel">
+            <header class="mission-deployment-header">
+                <p class="mission-deployment-kicker">MISSION CONTROL · EXTERIOR CAMERA</p>
+                <h2 id="mission-deployment-title"></h2>
+                <p id="mission-deployment-destination"></p>
+            </header>
+            <div class="mission-deployment-scene" data-phase="activation">
+                <canvas id="mission-deployment-art" width="320" height="180" aria-hidden="true"></canvas>
+            </div>
+            <p id="mission-deployment-copy" class="mission-deployment-copy" role="status" aria-live="polite"></p>
+            <div class="mission-deployment-actions">
+                <span id="mission-deployment-objective"></span>
+                <button id="mission-deployment-skip" class="mission-experience-button" type="button">SKIP DEPLOYMENT</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="audio-settings" class="audio-settings" aria-labelledby="audio-settings-title">
+        <form method="dialog" class="audio-settings-panel">
+            <header class="audio-settings-header">
+                <div>
+                    <p class="audio-kicker">SHIP SYSTEMS · AUXILIARY</p>
+                    <h2 id="audio-settings-title">AUDIO SETTINGS</h2>
+                </div>
+                <button class="audio-close" type="button" aria-label="Close audio settings">×</button>
+            </header>
+
+            <label class="audio-toggle-row">
+                <span>MASTER MUTE</span>
+                <input type="checkbox" data-audio-mute>
+            </label>
+
+            <label class="audio-slider-row">
+                <span>MASTER VOLUME <output data-audio-value="master">80%</output></span>
+                <input type="range" min="0" max="1" step="0.01" value="0.8" data-audio-volume="master">
+            </label>
+            <label class="audio-slider-row">
+                <span>MUSIC <output data-audio-value="music">28%</output></span>
+                <input type="range" min="0" max="1" step="0.01" value="0.28" data-audio-volume="music">
+            </label>
+            <label class="audio-slider-row">
+                <span>SOUND EFFECTS <output data-audio-value="sfx">62%</output></span>
+                <input type="range" min="0" max="1" step="0.01" value="0.62" data-audio-volume="sfx">
+            </label>
+            <label class="audio-slider-row">
+                <span>AMBIENCE <output data-audio-value="ambient">24%</output></span>
+                <input type="range" min="0" max="1" step="0.01" value="0.24" data-audio-volume="ambient">
+            </label>
+
+            <p class="audio-settings-note">SETTINGS SAVED TO THIS DEVICE</p>
+
+            <section class="game-data-settings" aria-labelledby="game-data-settings-title">
+                <div>
+                    <p class="audio-kicker">SYSTEM MAINTENANCE</p>
+                    <h3 id="game-data-settings-title">GAME DATA &amp; PROGRESS</h3>
+                    <p>Reset saved missions, astronaut profile, customisation, and all game progress on this device.</p>
+                </div>
+                <button id="factory-reset-open" class="factory-reset-button" type="button"
+                    aria-haspopup="dialog" aria-controls="factory-reset-dialog">RESET ENTIRE GAME</button>
+            </section>
+        </form>
+    </dialog>
+
+    <dialog id="factory-reset-dialog" class="factory-reset-dialog" aria-labelledby="factory-reset-title">
+        <section id="factory-reset-first-step" class="factory-reset-panel">
+            <p class="audio-kicker">SYSTEM MAINTENANCE · PERMANENT ACTION</p>
+            <h2 id="factory-reset-title">RESET ENTIRE GAME?</h2>
+            <p>This will permanently erase your saved missions, mission history, astronaut profile, companion settings, audio preferences, achievements, knowledge unlocks, and all other game progress on this device.</p>
+            <p class="factory-reset-warning">This cannot be undone. Your browser's unrelated data will not be changed.</p>
+            <div class="factory-reset-actions">
+                <button class="factory-reset-secondary" type="button" data-factory-reset-cancel>Cancel</button>
+                <button id="factory-reset-continue" class="factory-reset-danger" type="button">Continue</button>
+            </div>
+        </section>
+        <section id="factory-reset-second-step" class="factory-reset-panel" hidden>
+            <p class="audio-kicker">FINAL CONFIRMATION</p>
+            <h2>CONFIRM FACTORY RESET</h2>
+            <p>Type <strong>RESET</strong> exactly to permanently erase all Beyond Earth game data.</p>
+            <label class="factory-reset-label" for="factory-reset-confirmation">TYPE RESET TO CONTINUE</label>
+            <input id="factory-reset-confirmation" class="factory-reset-input" type="text"
+                autocomplete="off" autocapitalize="off" spellcheck="false">
+            <p class="factory-reset-warning">There is no recovery for this action.</p>
+            <output id="factory-reset-feedback" class="factory-reset-feedback" role="status" aria-live="polite"></output>
+            <div class="factory-reset-actions">
+                <button class="factory-reset-secondary" type="button" data-factory-reset-cancel>Cancel</button>
+                <button id="factory-reset-confirm" class="factory-reset-danger" type="button" disabled>RESET GAME</button>
+            </div>
+        </section>
+    </dialog>
+
+    <script src="js/audio.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/galaxy-atmosphere.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cockpit-interactions.js"></script>
+    <script src="js/game-state.js"></script>
+    <script src="js/catalogs.js"></script>
+    <script src="js/spacecraft.js"></script>
+    <script src="js/compatibility.js"></script>
+    <script src="js/resources.js"></script>
+    <script src="js/knowledge.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/mission-manager.js"></script>
+    <script src="js/mission-builder.js"></script>
+    <script src="js/mission-education.js"></script>
+    <script src="js/mission-generater.js"></script>
+    <script src="js/minigames/controls.js"></script>
+    <script src="js/minigames/minigames.js"></script>
+    <script src="js/minigames/spectrum-detective.js"></script>
+    <script src="js/minigames/payload-tetris.js"></script>
+    <script src="js/minigames/cosmic-claw.js"></script>
+    <script src="game4.js"></script>
+    <script src="js/personnel.js"></script>
+    <script src="js/mission-experience.js"></script>
+    <script src="js/launch-scene.js"></script>
+    <script src="js/cockpit-sandbox.js"></script>
+    <script src="js/missions-tab.js"></script>
+    <script src="js/factory-reset.js"></script>
+    <script src="js/robot-companion.js"></script>
+
+</body>
+</html>

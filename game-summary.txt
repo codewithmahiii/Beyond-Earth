@@ -1,0 +1,538 @@
+BEYOND EARTH - GAME AND MISSION SYSTEM SUMMARY
+================================================
+
+This document describes the game as it is currently implemented in this
+project. It is a summary of the code, not a feature proposal. The main entry
+point is index.html; the mission builder, mission manager, catalogues, flight
+experience, cockpit, profile, and audio features are implemented in the js
+folder.
+
+
+1. WHAT KIND OF GAME THIS IS
+----------------------------
+
+Beyond Earth is a space-exploration mission planning game with a spacecraft
+cockpit, astronaut profile, editable mission blueprints, engineering checks,
+mission deployment, a generated flight plan, and a mission-linked science
+minigame.
+
+There are not a set of fixed, authored story missions with dialogue trees.
+The player creates a mission by combining a destination, science objectives,
+spacecraft architecture and equipment, journey choices, and resource limits.
+The game then generates operational activity cards/phases from some of those
+objectives. The choices mainly affect the saved mission design, review
+warnings, generated activities, and whether Spectrum Detective is available.
+
+Important distinction: most generated activities are planning records, not
+separate playable levels. Spectrum Detective is the one registered science
+minigame in the shipped code.
+
+
+2. STARTUP AND MAIN SCENES
+--------------------------
+
+The opening begins with an animated launch scene. The player can skip it and
+go directly to the cockpit. Otherwise, a wake-up scene asks the player to
+press the primary POWER ON button; the flight-deck screens and indicators
+activate before the cockpit appears. Reduced-motion settings shorten or
+remove some of these waits.
+
+The main cockpit has these stations:
+
+  - SETTINGS: opens audio settings and the Game Data & Progress section,
+    which includes a two-step factory reset with typed confirmation.
+  - CONTINUE: opens Mission Control, where an existing draft or flight is
+    displayed if one exists.
+  - NEW MISSION: opens Mission Control for a new mission blueprint.
+  - RUN MISSION: enabled only when the active mission has been approved.
+  - ASTRONAUT: opens the astronaut profile.
+  - ARCHIVE: currently displays cockpit feedback only; there is no connected
+    archive screen or populated archive catalogue in the shipped interface.
+
+There is one active mission at a time. Mission progress and mission history
+are stored locally in browser storage, so a saved draft or flight can be
+restored on the same device/browser.
+
+
+3. MISSION CREATION: THE 12 PLANNING STAGES
+-------------------------------------------
+
+The mission console presents these stages in order. The progress bar also
+allows direct navigation between stages after a draft has been created.
+Most choices save immediately as flight notes.
+
+01 - Mission Headquarters
+  Enter a mission designation (up to 80 characters). A new draft is created
+  as mission type "science". The initial resource values are 1,000 credits,
+  1,000 Wh power reserve, 500 kg propellant, 100 MB data storage, and 100%
+  equipment condition. The astronaut's selected colour and emblem appear in
+  the planning experience.
+
+02 - Choose a destination
+  Select one of 14 catalogue targets. The page shows the destination type,
+  description, scientific value, risk, travel estimate, and environmental
+  readings. Selecting a destination copies its environmental conditions into
+  the mission and sets the duration to the catalogue travel estimate unless
+  the player has manually changed the duration.
+
+  Destinations and catalogue travel estimates:
+    Earth Orbit (0 days), Moon (3), Mars (210), Venus (120), Mercury (150),
+    Jupiter (1,800), Europa (1,900), Ganymede (1,800), Saturn (2,600),
+    Titan (2,600), Enceladus (2,600), Asteroids (400),
+    Near-Earth Object (120), and Sun (30).
+
+  Each destination also has a type, approximate AU distance, scientific-value
+  rating, risk value, and environmental conditions. Risk is used in the
+  generated plan. A risk greater than 0.6 creates a high-risk plan warning.
+  Destination risks range from Earth Orbit at 0.1 to the Sun at 0.9.
+
+03 - Choose your science
+  Choose one primary objective and any number of supporting objectives.
+  Selecting an already-primary objective as primary again does not clear it;
+  promoting a secondary objective to primary removes it from the secondary
+  list. Supporting objectives can be checked or unchecked independently.
+  The page initially emphasizes destination recommendations; "EXPLORE ALL
+  OBJECTIVES" reveals the full catalogue. Recommendations are guidance, not
+  a lock on what can be selected.
+
+  The 13 objective options and their coded equipment/communications needs are:
+
+    Surface Exploration
+      Required instrument: Cameras. Requires relay-capable communications.
+    Geological Investigation
+      Required instruments: Spectrometer and Laser Altimeter.
+      Minimum data rate: 10 Mbps.
+    Atmospheric Analysis
+      Required instruments: Atmospheric Analyser and Infrared Spectrometer.
+      Minimum data rate: 8 Mbps.
+    Water or Ice Detection
+      Required instruments: Radar Sounder and Thermal Sensor.
+      Minimum data rate: 6 Mbps.
+    Mineral Composition
+      Required instruments: Spectrometer and Microscopic Imager.
+      Minimum data rate: 8 Mbps.
+    Magnetic Field Investigation
+      Required instruments: Magnetometer and Plasma Analyser.
+      Minimum data rate: 10 Mbps.
+    Radiation Measurement
+      Required instruments: Radiation Detector and Thermal Sensor.
+      Minimum data rate: 6 Mbps.
+    Seismic Monitoring
+      Required instruments: Seismometer and Laser Altimeter.
+      Minimum data rate: 8 Mbps.
+    Sample Collection
+      Required instruments: Robotic Arm and Drill.
+      Minimum data rate: 8 Mbps.
+    Planetary Imaging
+      Required instruments: Cameras and Infrared Spectrometer.
+      Minimum data rate: 7 Mbps.
+    Astrobiology Environmental Investigation
+      Required instruments: Atmospheric Analyser and Microscopic Imager.
+      Minimum data rate: 9 Mbps.
+    Orbital Observation
+      Required instruments: Cameras and Infrared Spectrometer.
+      Minimum data rate: 10 Mbps.
+    Space Weather Monitoring
+      Required instruments: Radiation Detector and Magnetometer.
+      Minimum data rate: 8 Mbps.
+
+  Preferred architectures are recommendations and appear in the catalogue.
+  The design checker enforces the explicit instrument and communications
+  needs, but does not reject a platform just because it is not listed as a
+  preferred architecture.
+
+04 - Choose a spacecraft
+  Select one of 11 architectures. The cards describe mission class, payload
+  limit, and objective coverage:
+    Orbiter - 1,100 kg; orbital.
+    Rover - 520 kg; surface.
+    Lander - 780 kg; surface.
+    Flyby Probe - 360 kg; trajectory.
+    Atmospheric Probe - 480 kg; atmospheric.
+    Sample Return - 920 kg; sample return.
+    Space Telescope - 1,500 kg; observatory.
+    Communications Satellite - 520 kg; relay.
+    CubeSat - 140 kg; small satellite.
+    Relay Spacecraft - 700 kg; relay.
+    Autonomous Research Probe - 350 kg; autonomous.
+  Changing the architecture keeps the already-selected equipment; the
+  engineering review then reports incompatible components or limits.
+
+05 - Propulsion and trajectory systems
+  Choose one propulsion catalogue item or explicitly select "NO COMPONENT
+  SELECTED":
+    Chemical Propulsion, Electric Propulsion, Ion Propulsion, Solar Sail,
+    Hybrid Propulsion, or Gravity-Assist Trajectory.
+  Compatibility and a recommended option are shown, but non-recommended
+  choices remain selectable and are checked in the review.
+
+06 - Power system
+  Choose one power source or no component:
+    Solar Panels, Batteries, Radioisotope Power, or Hybrid Power.
+  The system compares the installed equipment's power draw with the selected
+  system's output.
+
+07 - Science instruments
+  Select any number of instruments with checkboxes. Required instruments for
+  the selected objectives are marked REQUIRED; other items are marked
+  recommended, optional, or specialised. Specialised instruments can still
+  be selected, but the design review can flag incompatibilities.
+  The catalogue includes Cameras, Infrared Spectrometer, Radar Sounder,
+  Magnetometer, Radiation Detector, Thermal Sensor, Atmospheric Analyser,
+  Seismometer, Laser Altimeter, Spectrometer, Robotic Arm, Drill, Microscopic
+  Imager, Dust Analyser, and Plasma Analyser.
+
+08 - Communications
+  Choose one link or no component:
+    High-Gain Antenna, Low-Gain Antenna, Relay Communications, or
+    Direct-to-Earth Communication.
+  The page computes the greatest minimum data rate required by the chosen
+  objectives and whether any objective requires relay capability. Links
+  below those needs are selectable but cause hard design issues.
+
+09 - Navigation and thermal systems
+  Choose one navigation system and one thermal-control system, or leave
+  either category unselected:
+    Navigation: Star Tracker, Inertial Navigation, Deep-Space Navigation.
+    Thermal: Passive Radiator, Active Thermal Loop, Cryogenic Control.
+
+10 - Journey profile
+  Choose a launch configuration:
+    Standard Launch, Heavy-Lift Launch, or Rideshare Launch.
+  Choose a trajectory profile based on the architecture's mission class:
+    Surface: Direct Transfer, Orbital Insertion, Surface Deployment,
+      Gravity Assist.
+    Orbital: Direct Transfer, Orbital Insertion, Gravity Assist, Flyby.
+    Atmospheric/autonomous: Direct Transfer, Atmospheric Entry,
+      Orbital Insertion, Gravity Assist.
+  These are saved planning selections. The dossier explicitly notes that a
+  launch configuration does not currently have a launch simulation attached.
+  The selected profile does not independently execute a physics simulation.
+
+11 - Mission constraints
+  Set budget (100-10,000 credits, in 100-credit steps), power reserve
+  (100-10,000 Wh, steps of 100), propellant (0-1,000 kg, steps of 10),
+  data-storage capacity (16-2,048 MB, steps of 16), and duration
+  (0-3,000 days, steps of 10). These values are saved on the mission.
+  The page visualizes payload use against the architecture limit and the
+  installed spacecraft power margin. Most resource sliders do not themselves
+  simulate costs or automatically change mission outcomes.
+
+12 - Mission dossier / review
+  Review the destination, science objectives, spacecraft, journey, resources,
+  selected equipment, generated activities, and engineering issues. The
+  blueprint updates while planning and includes a small pixel-art preview.
+  The dossier has four pages: COVER, SCIENCE, SPACECRAFT, and FLIGHT PLAN.
+  The flight-plan page includes destination conditions, resource reserves,
+  accepted trade-offs (if present), journey settings, and the engineering
+  review.
+
+  The review checks that catalogue entries exist; equipment matches the
+  architecture; selected components do not conflict when conflict metadata is
+  present; architecture component slots are checked when equipment has slot
+  metadata; payload mass is within the architecture limit; power demand does
+  not exceed power output; every objective's required instruments are
+  installed; and the communications system satisfies data-rate/relay
+  requirements. Destination operating limits are checked if equipment
+  definitions provide them. The current built-in components do not define
+  slot, conflict, or operating-limit metadata, so those checks are available
+  in the framework but do not currently constrain the built-in choices.
+
+  Review statuses are:
+    SUITABLE - no warnings or hard issues; eligible for approval.
+    CONDITIONAL - warnings but no hard issues; not approvable by the current
+      approval operation.
+    INCOMPATIBLE - at least one hard issue; not approvable.
+  Approval also requires a selected destination and at least one objective.
+  The player reviews the dossier and presses APPROVE MISSION to approve.
+
+
+4. WHAT DESIGN CHOICES DO AND DO NOT CHANGE
+-------------------------------------------
+
+Destination and objective selections feed the generated activity plan and
+design checks. Architecture and equipment affect whether the design passes
+compatibility, payload, and power checks. Instrument and communications
+choices determine whether objective requirements are met, and they determine
+whether the science minigame is available.
+
+Most architecture/platform ratings and component compatibility lists provide
+recommendations and review feedback; they do not model full spacecraft
+physics. The engineering checks use catalogue fields such as mass, draw,
+output, data rate, relay capability, component compatibility, and objective
+requirements. Journey options and launch configuration are stored as choices
+but do not alter a simulated trajectory.
+
+The generated plan contains success-condition descriptions ("Required
+mission phases complete", "All primary objectives validated", and "Critical
+resource thresholds maintained"), but the current UI does not enforce those
+conditions before mission completion. Advancing a phase records the current
+activity; it does not require the player to pass an activity minigame. The
+player can complete an active or paused mission without completing every
+phase or objective.
+
+
+5. GENERATED ACTIVITIES / MISSION PHASES
+----------------------------------------
+
+The mission generator adds activity templates for supported objectives.
+Activities from selected objectives are combined, duplicate activity IDs are
+removed, and required activities are ordered before optional ones. The flight
+panel can advance the saved current phase through this ordered list. Categories,
+difficulty, and conditions are planning metadata; they are not independent
+playable games in this build.
+
+Surface Exploration
+  REQUIRED - Terrain Navigation (mobility, difficulty 2):
+    vehicle steering; hazard mapping.
+  REQUIRED - Surface Survey (science, difficulty 3):
+    camera calibration; terrain annotation.
+  OPTIONAL - Waypoint Operations (operations, difficulty 2):
+    route refinement; power management.
+
+Geological Investigation
+  REQUIRED - Rock Analysis (science, difficulty 3):
+    sample handling; spectral scan.
+  REQUIRED - Geology Mapping (science, difficulty 3):
+    layer identification; surface marking.
+  OPTIONAL - Sample Storage (operations, difficulty 2):
+    seal check; inventory control.
+
+Atmospheric Analysis
+  REQUIRED - Atmospheric Sampling (science, difficulty 4):
+    sensor calibration; gas detection.
+  REQUIRED - Weather Model Update (analysis, difficulty 3):
+    wind profile; temperature inversion.
+  OPTIONAL - Communications Window (operations, difficulty 2):
+    data transfer; relay handoff.
+
+Water or Ice Detection
+  REQUIRED - Ice Signature Scan (science, difficulty 3):
+    radar readout; thermal contrast.
+  REQUIRED - Plume or Subsurface Analysis (science, difficulty 4):
+    volatiles detection; crust mapping.
+  OPTIONAL - Thermal Pass (operations, difficulty 2):
+    thermal drift correction; sensor rebalancing.
+
+Sample Collection
+  REQUIRED - Sample Acquisition (science, difficulty 4):
+    contact stability; collection tool validation.
+  REQUIRED - Sample Archive (operations, difficulty 3):
+    container seal; sample ID logging.
+  Return Trajectory (navigation, difficulty 5; launch window; re-entry plan):
+    required for Sample Return architecture, optional for other architectures.
+
+Orbital Observation
+  REQUIRED - Orbit Alignment (navigation, difficulty 3):
+    precision vectoring; pass timing.
+  REQUIRED - Image Planning (science, difficulty 3):
+    target framing; coverage selection.
+  OPTIONAL - Data Downlink (communications, difficulty 2):
+    signal lock; buffering.
+
+Radiation Measurement
+  REQUIRED - Sensor Calibration (science, difficulty 3):
+    radiation baseline; detector check.
+  REQUIRED - Shielding Check (operations, difficulty 2):
+    dose model; power balancing.
+  OPTIONAL - Forecast Update (analysis, difficulty 2):
+    flux estimate; event alert.
+
+Space Weather Monitoring
+  REQUIRED - Solar Watch (science, difficulty 4):
+    solar flare tracking; magnetometer sweep.
+  REQUIRED - Flux Model Review (analysis, difficulty 3):
+    storm index; system response.
+  OPTIONAL - Warning Window (communications, difficulty 2):
+    telemetry routing; relay handoff.
+
+Magnetic Field Investigation
+  REQUIRED - Magnetometer Sweep (science, difficulty 3):
+    field calibration; vector sampling.
+  REQUIRED - Plasma Trace Capture (science, difficulty 3):
+    particle count; magnetic anomaly tracking.
+  OPTIONAL - Field Model Update (analysis, difficulty 2):
+    combined survey review; local orbital correction.
+
+The other catalogue objectives (Mineral Composition, Seismic Monitoring,
+Planetary Imaging, and Astrobiology Environmental Investigation) currently
+have no activity templates in the generator. Missions using only those
+objectives can therefore have zero generated phases. The plan's overall
+difficulty is calculated from objective count, destination risk, and whether
+an architecture is selected, then clamped to 1-10. Destination risk also
+labels the plan low/moderate/high. Risks above 0.6 add a contingency-planning
+warning.
+
+
+6. SPECTRUM DETECTIVE SCIENCE MINIGAME
+--------------------------------------
+
+Spectrum Detective is the only minigame registered in the current game. It
+can be played during an active mission only when:
+  - At least one selected primary/secondary objective is one of Atmospheric
+    Analysis, Water or Ice Detection, Geological Investigation, Mineral
+    Composition, Astrobiology Environmental Investigation, Planetary Imaging,
+    Orbital Observation, or Space Weather Monitoring; AND
+  - The spacecraft includes at least one of Spectrometer, Infrared
+    Spectrometer, Atmospheric Analyser, or Thermal Sensor.
+
+The minigame creates a spectral trace and reference curves for up to five
+materials: Water Ice, Carbon Dioxide, Iron-Rich Minerals, Silicate Minerals,
+Methane, and Iron Oxide. The objective-to-default-material mapping is:
+  Atmospheric Analysis -> Carbon Dioxide
+  Water or Ice Detection -> Water Ice
+  Geological Investigation -> Iron-Rich Minerals
+  Mineral Composition -> Silicate Minerals
+  Astrobiology Environmental Investigation -> Methane
+  Planetary Imaging -> Iron Oxide
+  Orbital Observation -> Silicate Minerals
+  Space Weather Monitoring -> Carbon Dioxide
+
+The target is selected from the mission objective(s) and mission ID. The
+screen plots an unknown trace, presents a reference library, and has a
+Wavelength Focus slider. Selecting a reference overlays its curve; Clear
+Selection removes the overlay; Submit Analysis compares the selected material
+ID to the target. In the current implementation, the analysis summary names
+the target sample before submission, so the intended identification answer is
+visible in the displayed text.
+
+Submitting the correct reference records success, a score of 90, and a 0.9
+performance rating. A wrong reference records failure, a score of 16.25, and
+a 0.35 rating. The result includes a scientific-data record identifying the
+target, selected reference, instrument quality, and confidence. Correct
+identification marks the mission's primary objective complete, if present.
+The result consumes 8 MB of data storage and reduces equipment condition by
+2 percentage points. No budget or propellant is consumed by this minigame.
+
+The game can pause/resume or end the activity. Results are attached to the
+active mission; resource changes, completed objective IDs, and scientific data
+are validated and stored. A minigame cannot start unless its mission is
+active, and only one minigame can run at a time.
+
+
+7. FLIGHT LIFECYCLE AND MISSION RECORDS
+---------------------------------------
+
+Mission status transitions in the manager:
+  DRAFT -> APPROVED or CANCELLED
+  APPROVED -> ACTIVE or CANCELLED
+  ACTIVE -> PAUSED, COMPLETED, FAILED, or CANCELLED
+  PAUSED -> ACTIVE, COMPLETED, FAILED, or CANCELLED
+  COMPLETED, FAILED, and CANCELLED are terminal statuses.
+
+The normal UI flow is:
+  1. Save a draft as choices are made.
+  2. Review and approve a suitable mission dossier.
+  3. Use RUN MISSION / START DEPLOYMENT.
+  4. View an animated deployment sequence (or reduced-motion version).
+  5. The flight becomes active and the first generated activity is recorded.
+  6. If Spectrum Detective is eligible, it starts automatically after
+     deployment; otherwise the flight panel explains why none is available.
+  7. Pause/resume, advance the current phase, play/end the science activity,
+     complete the mission, or cancel it from the flight panel.
+
+The deployment includes a pixel-art destination/spacecraft scene and profile
+portrait; it is a presentation sequence, not a launch physics simulation.
+Mission completion averages any recorded minigame scores into a final score.
+It awards 10 experience points if at least one scored minigame result exists,
+otherwise 0. Completion archives the mission, updates completed-mission IDs,
+and runs any registered achievement evaluators.
+
+The code provides achievement and research-progress infrastructure, but no
+achievements or knowledge entries are registered by the shipped game scripts.
+The player's stored rank defaults to RECRUIT and is not advanced by current
+mission completion code. The Knowledge API can store/unlock registered
+entries, but there is currently no populated in-game archive view connected to
+the ARCHIVE cockpit station.
+
+Mission history shows completed and closed flights, including cancelled or
+failed records if those statuses are set. A draft can be discarded/cancelled
+and is archived. The user-facing flight panel does not currently expose a
+FAIL action, although the mission manager supports a failed terminal status.
+
+
+8. RESOURCE AND DESIGN SYSTEMS
+------------------------------
+
+Mission resource fields include budget credits, mass, power reserve, fuel,
+data storage, communications margin, and equipment condition. Resource
+changes are recorded with reason, source, before/after values, and timestamp.
+Negative balances are rejected for bounded resources; equipment condition is
+kept between 0 and 1. The mission manager initializes resource values and
+records resource changes and consumed amounts.
+
+Spacecraft design facts calculate selected equipment mass, power draw, and
+power output from the component catalogue. Hard review issues include
+incompatible architecture, unknown selected component, exceeded payload,
+exceeded power output, missing objective instrument, unsupported data rate or
+band, and missing relay capability when required. Missing design information
+can instead produce a warning.
+
+The selected equipment catalogue contains:
+  Propulsion: Chemical, Electric, Ion, Solar Sail, Hybrid, Gravity-Assist.
+  Power: Solar Panels, Batteries, Radioisotope Power, Hybrid Power.
+  Communications: High-Gain Antenna, Low-Gain Antenna, Relay Communications,
+    Direct-to-Earth Communication.
+  Instruments: Cameras, Infrared Spectrometer, Radar Sounder, Magnetometer,
+    Radiation Detector, Thermal Sensor, Atmospheric Analyser, Seismometer,
+    Laser Altimeter, Spectrometer, Robotic Arm, Drill, Microscopic Imager,
+    Dust Analyser, Plasma Analyser.
+  Thermal: Passive Radiator, Active Thermal Loop, Cryogenic Control.
+  Navigation: Star Tracker, Inertial Navigation, Deep-Space Navigation.
+
+
+9. COCKPIT SANDBOX, PROFILE, AUDIO, AND PRESENTATION
+----------------------------------------------------
+
+The cockpit contains interactive controls for cabin lighting, thermal
+comfort, power bus, communications, life support, thermal system, simulated
+power distribution, a systems monitor, a maintenance panel, and a flight
+note/window discovery. The systems monitor has POWER, THERMAL, COMMS, and
+LIFE SUPPORT pages. Values update as switches/dials are used; the screen
+explicitly labels these readings as simulated and says they do not affect
+mission resources or mission state. Maintenance self-checks are local-only.
+The window note reads: "The blue planet's clouds look like a tiny rabbit
+when the cabin lights are low." These interactions are cockpit toys, not
+mission-system controls.
+
+The astronaut profile saves a full name, callsign, generated BE- identifier,
+colour family, emblem/sticker, and expression. It offers seven colour
+families (purple, pink, yellow, blue, green, red, black/grey), seven emblems
+(butterfly, rose, star, crescent moon, ringed planet, shooting star,
+winged heart), and seven expressions (happy, calm, sleepy, surprised,
+excited, wink, shy). The colour palette changes the ship/game interface
+theme; the profile identity is shown in planning and deployment.
+
+Audio settings include master mute, master volume, music, sound-effects, and
+ambience levels. Preferences are saved on the device. Sound is implemented
+with Web Audio where available, including interface feedback and launch,
+panel, mission-completion, and achievement cues.
+
+The Settings dialog's factory reset removes all game-owned browser storage,
+including campaign/profile records and audio preferences, then reloads the
+game into its first-time launch sequence. It preserves unrelated site data.
+
+The interface uses generated canvas/pixel-art scenes for the launch, cockpit,
+planet previews, mission blueprint, and deployment. It responds to a
+reduced-motion preference and includes keyboard-accessible controls and
+status announcements in the mission/profile/cockpit interfaces.
+
+
+10. DATA AND IMPLEMENTATION NOTES
+---------------------------------
+
+The destination, objective, architecture, and spacecraft component
+definitions used by the current mission UI are registered directly by
+js/mission-builder.js. The similarly named JSON files in data are not used by
+the current page scripts. Mission definitions and history, progression,
+knowledge unlock IDs, companion preferences, and astronaut profile are saved
+under the `beyond-earth-data:` localStorage namespace; audio preferences use
+the standalone `beyond-earth-audio-v1` key. No sessionStorage, IndexedDB,
+cookies, or Cache API persistence is used by the current page scripts.
+
+The mission manager enforces one active mission, schema validation, status
+transitions, approval requirements, mission history, and minigame result
+validation. The test suite includes coverage for approval, minigame lifecycle,
+resource changes, progression, persistence, scoped minigame input, and
+isolated cockpit interactions.
+

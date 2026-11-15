@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f1e7">
+    <title>Cosmic Crush — Mission Match</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylecrush.css">
+</head>
+<body>
+    <main class="cosmic-crush">
+        <header class="game-header">
+            <div class="game-brand">
+                <span class="game-brand__star" aria-hidden="true">✦</span>
+                <div>
+                    <h1>COSMIC CRUSH</h1>
+                    <p>SPACE MATCH PUZZLE</p>
+                </div>
+            </div>
+            <div class="level-badge" aria-label="Current level">
+                <span>LEVEL</span>
+                <strong id="level">01</strong>
+            </div>
+        </header>
+
+        <section class="mission-card" aria-labelledby="missionTitle">
+            <div class="mission-card__copy">
+                <span class="section-kicker">CURRENT MISSION</span>
+                <h2 id="missionTitle">Collect cosmic energy!</h2>
+                <p>Match space objects to power your spacecraft.</p>
+            </div>
+            <span class="mission-card__ship" role="img" aria-label="Spacecraft">🚀</span>
+        </section>
+
+        <section class="game-stats" aria-label="Game statistics">
+            <div class="stat-card">
+                <span>SCORE</span>
+                <strong id="score">0</strong>
+            </div>
+            <div class="stat-card stat-card--target">
+                <span>TARGET</span>
+                <strong id="target">1500</strong>
+            </div>
+            <div class="stat-card">
+                <span>MOVES</span>
+                <strong id="moves">20</strong>
+            </div>
+        </section>
+
+        <div class="progress-track" role="progressbar" aria-label="Mission target progress"
+            aria-valuemin="0" aria-valuemax="1500" aria-valuenow="0">
+            <div id="progressBar" class="progress-track__fill"></div>
+            <span class="progress-track__spark" aria-hidden="true">✦</span>
+        </div>
+
+        <section class="puzzle-panel" aria-label="Match-three game">
+            <div class="puzzle-panel__topline">
+                <span>ENERGY FIELD</span>
+                <span>8 × 8 GRID</span>
+            </div>
+            <div id="gameBoard" class="game-board" role="grid" aria-label="Cosmic Crush game board"></div>
+            <p id="gameMessage" class="game-message" role="status" aria-live="polite">PICK A TILE TO BEGIN</p>
+        </section>
+
+        <section class="how-to-play" aria-labelledby="howToPlayTitle">
+            <div class="how-to-play__icon" aria-hidden="true">✧</div>
+            <div>
+                <h2 id="howToPlayTitle">HOW TO PLAY</h2>
+                <p>Swap neighbouring objects to match 3 or more. Match more during a cascade to build your combo and collect extra cosmic energy.</p>
+            </div>
+        </section>
+
+        <div class="game-actions">
+            <button id="restartButton" class="secondary-button" type="button">↻ RESTART</button>
+            <button id="soundToggle" class="secondary-button" type="button" aria-pressed="true">SOUND ON</button>
+        </div>
+
+        <footer class="game-footer">NASA-INSPIRED PUZZLE GAME · COSMIC EXPLORATION DIVISION</footer>
+    </main>
+
+    <div id="missionModal" class="mission-modal" role="dialog" aria-modal="true"
+        aria-labelledby="modalTitle" aria-describedby="modalMessage" hidden>
+        <section class="mission-modal__card">
+            <span id="modalIcon" class="mission-modal__icon" aria-hidden="true">🏆</span>
+            <span id="modalLabel" class="section-kicker">MISSION COMPLETE</span>
+            <h2 id="modalTitle">Stellar work!</h2>
+            <p id="modalMessage">You collected enough cosmic energy to power your spacecraft.</p>
+            <strong id="modalReward" class="mission-modal__reward">SPACE POINTS +0</strong>
+            <button id="modalAction" class="primary-button" type="button">NEXT LEVEL</button>
+        </section>
+    </div>
+
+    <script src="gamecrush.js"></script>
+</body>
+</html>
